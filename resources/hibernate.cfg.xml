@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC 
+          "-//Hibernate/Hibernate Configuration DTD 3.0//EN" 
+          "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+        
+<hibernate-configuration>
+	<session-factory>
+		<!-- configure the database setting -->
+		<property name="connection.username">root</property>
+		<property name="connection.password">admin@forlty</property>
+		<property name="connection.driver_class">com.mysql.jdbc.Driver</property>
+		<property name="connection.url">jdbc:mysql://localhost:3306/cate</property>
+		
+		<!-- transaction is supported by org.hibernate.dialect.MySQL5InnoDBDialect -->
+		<property name="dialect">org.hibernate.dialect.MySQL5InnoDBDialect</property>
+		
+		<!-- show sql in the console -->
+		<property name="show_sql">true</property>
+		
+		<!-- create and update the database automaticlly -->
+		<property name="hbm2ddl.auto">update</property>
+		
+		<!--jdbc.fetch_size是指Hibernate每次从数据库中取出并放到JDBC的Statement中的记录条数。
+		Fetch Size设的越大，读数据库的次数越少，速度越快，Fetch Size越小，读数据库的次数越多，速度越慢-->
+        <property name="jdbc.fetch_size">50</property>
+        
+        <!--jdbc.batch_size是指Hibernate批量插入,删除和更新时每次操作的记录数。Batch Size越大，批量操作的向数据库发送Sql的次数越少，速度就越快，同样耗用内存就越大-->
+        <property name="jdbc.batch_size">23</property>
+        
+        <!--connection.useUnicode连接数据库时是否使用Unicode编码-->
+        <property name="Connection.useUnicode">true</property>
+        <property name="connection.characterEncoding">UTF-8</property>
+		<!--
+		<property name="hibernate.connection.pool.size">20</property>-->
+		<property name="hibernate.connection.provider_class">org.hibernate.connection.C3P0ConnectionProvider</property>
+		<!-- 获得连接的超时时间,如果超过这个时间,会抛出异常，单位毫秒 -->
+		<property name="hibernate.c3p0.timeout">5000</property>
+		<property name="hibernate.c3p0.max_size">20</property>
+		<property name="hibernate.c3p0.max_statements">100</property>
+		<property name="hibernate.c3p0.min_size">5</property>
+		<!-- 每隔120秒检查连接池里的空闲连接 ，单位是秒-->
+		<property name="hibernate.c3p0.idle_test_period">120</property>
+		<!-- 当连接池里面的连接用完的时候，C3P0一下获取的新的连接数 -->
+		<property name="hibernate.c3p0.acquire_increment">2</property>
+		<!-- 每次都验证连接是否可用 -->
+		<property name="hibernate.c3p0.validate">true</property>
+		
+		<!-- javax.persistence.validation.mode默认情况下是auto的，就是说如果不设置的话它是自动去你的classpath下面找一个bean-validation**包，但是找不到，所以beanvalitionFactory错误 -->
+		<property name="javax.persistence.validation.mode">none</property>
+		<!-- <mapping resource="slide.hbm.xml"/> -->
+		<mapping class="com.cate.entity.Banner"/>
+		<mapping class="com.cate.entity.Food"/>
+	</session-factory>
+</hibernate-configuration>

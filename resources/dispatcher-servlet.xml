@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"  
+    xmlns:context="http://www.springframework.org/schema/context"  
+    xmlns:mvc="http://www.springframework.org/schema/mvc" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+    xmlns:p="http://www.springframework.org/schema/p"
+    xmlns:jee="http://www.springframework.org/schema/jee"
+    xsi:schemaLocation="  
+        http://www.springframework.org/schema/beans       
+        http://www.springframework.org/schema/beans/spring-beans-3.2.xsd  
+        http://www.springframework.org/schema/context   
+        http://www.springframework.org/schema/context/spring-context-3.2.xsd  
+        http://www.springframework.org/schema/mvc  
+        http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
+        http://www.springframework.org/schema/jee 
+        http://www.springframework.org/schema/jee/spring-jee-3.2.xsd">
+	
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"  
+        p:defaultEncoding="UTF-8"  
+        p:maxUploadSize="5400000"  
+        p:uploadTempDir="fileUpload/temp">  
+    </bean>
+
+	<context:component-scan base-package="com.cate.*" />
+	<!-- 启用mvc注解 -->  
+    <mvc:annotation-driven />
+    <mvc:default-servlet-handler/>
+	<context:annotation-config />
+    <!-- 配置静态资源，避免spring拦截器拦截 -->
+    <mvc:resources location="/errorpage/" mapping="/errorpage/**" cache-period="31556926"/>
+    
+    <bean id="viewResolver"  
+        class="org.springframework.web.servlet.view.InternalResourceViewResolver">  
+        <property name="prefix" value="/WEB-INF/view/" />  
+        <property name="suffix" value=".jsp" />   
+    </bean>
+    
+    
+    
+    <!-- 
+    <jee:jndi-lookup id="datasource" jndi-name="java:comp/env/jdbc/cate"/> -->
+    
+    <!--定义JDBC模板  --> 
+    <!--
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+         <property name="dataSource">
+        <ref bean="datasource"/>
+        </property>
+    </bean>-->
+    
+    <!-- 事务中注入dataSource -->
+    <!--
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">   
+       <property name="dataSource">
+        <ref bean="datasource"/>
+        </property>
+    </bean>-->
+</beans>        
