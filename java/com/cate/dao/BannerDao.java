@@ -5,11 +5,13 @@ import java.util.List;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.cate.entity.Banner;
 import com.cate.util.DateUtil;
 import com.cate.util.HibernateUtil;
 @Repository
+@Transactional
 public class BannerDao {
 	/**
 	 * 获取所有

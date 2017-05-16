@@ -10,7 +10,6 @@
 		//轮播初始化
 		initSlide:function(){
 			mui.ajax(urlUtil.getRequestUrl("initSlid"), {
-				async: true,
 				dataType: "json",
 				type:"post",
 				success:function(data){
@@ -113,12 +112,13 @@
 
 		//获取分类列表
 		getFoodList: function(classify){
+			console.log("1:"+classify)
 			classify = classify || "meishi";
+			console.log("2:"+classify)			
 			mui.ajax(urlUtil.getRequestUrl("getFoodList"), {
 				data:{
 					classify: classify
 				},
-				async: true,
 				dataType: "json",
 				type:"post",
 				success:function(data){
