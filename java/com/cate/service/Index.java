@@ -10,4 +10,8 @@ public interface Index {
 	public JSONObject getSlides(HttpServletRequest request);
 	//获取美食列表
 	public JSONObject getFoodList(String classify);
+	//获取详情
+	public JSONObject getDetail(int id);
+	//获取订单信息
+	public JSONObject getCheckInfo(int id, int number);
 }

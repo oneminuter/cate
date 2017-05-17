@@ -26,10 +26,12 @@ public class AdminImpl implements Admin {
 	Map<String, Object> map = new HashMap<String, Object>();
 	@Autowired
 	private Banner banner;
-	@Autowired
-	private BannerDao bannerDao;
-	@Autowired
-	private FoodDao foodDao;
+//	@Autowired
+//	private BannerDao bannerDao;
+//	@Autowired
+//	private FoodDao foodDao;
+	private BannerDao bannerDao = new BannerDao();
+	private FoodDao foodDao = new FoodDao();
 	/**
 	 * 添加banner
 	 */

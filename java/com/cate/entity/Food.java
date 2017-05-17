@@ -64,6 +64,8 @@ public class Food {
 	@Column(name="CONTENT", columnDefinition="TEXT")
 	private String content;
 	
+	@Column(name="STORE_NAME", length=20)
+	private String storeName;
 	
 	
 	public int getId() {
@@ -193,5 +195,13 @@ public class Food {
 
 	public void setContent(String content) {
 		this.content = content;
+	}
+
+	public String getStoreName() {
+		return storeName;
+	}
+
+	public void setStoreName(String storeName) {
+		this.storeName = storeName;
 	}
 }

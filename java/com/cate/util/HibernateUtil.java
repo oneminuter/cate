@@ -18,7 +18,7 @@ public class HibernateUtil {
 			}
 			session = sessionFactory.openSession();
 		}
-		
+//		sessionFactory.close();
 		return session;
 	}
 }

@@ -12,7 +12,9 @@
 		<property name="connection.url">jdbc:mysql://localhost:3306/cate</property>
 		
 		<!-- transaction is supported by org.hibernate.dialect.MySQL5InnoDBDialect -->
-		<property name="dialect">org.hibernate.dialect.MySQL5InnoDBDialect</property>
+		<!--
+		<property name="dialect">org.hibernate.dialect.MySQL5InnoDBDialect</property> -->
+		<property name="dialect">org.hibernate.dialect.MySQLDialect</property>
 		
 		<!-- show sql in the console -->
 		<property name="show_sql">true</property>
@@ -44,11 +46,13 @@
 		<property name="hibernate.c3p0.acquire_increment">2</property>
 		<!-- 每次都验证连接是否可用 -->
 		<property name="hibernate.c3p0.validate">true</property>
+		<property name="hibernate.connection.autocommit">false</property>
 		
 		<!-- javax.persistence.validation.mode默认情况下是auto的，就是说如果不设置的话它是自动去你的classpath下面找一个bean-validation**包，但是找不到，所以beanvalitionFactory错误 -->
 		<property name="javax.persistence.validation.mode">none</property>
 		<!-- <mapping resource="slide.hbm.xml"/> -->
 		<mapping class="com.cate.entity.Banner"/>
 		<mapping class="com.cate.entity.Food"/>
+		<mapping class="com.cate.entity.Order"/>
 	</session-factory>
 </hibernate-configuration>

@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.cate.entity.Banner;
 import com.cate.util.DateUtil;
 import com.cate.util.HibernateUtil;
+
 @Repository
 @Transactional
 public class BannerDao {
@@ -21,6 +22,7 @@ public class BannerDao {
 	public List<Banner> query(){
 		Session session = HibernateUtil.getSession();
 		String hql = "from Banner banner where isOnShelve = 1 order by orderNumber asc";
+		System.out.println(session);
 		List<Banner> list = session.createQuery(hql).list();
 		session.close();
 		return list;

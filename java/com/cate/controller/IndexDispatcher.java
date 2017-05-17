@@ -42,5 +42,17 @@ public class IndexDispatcher {
 		out.print(index.getFoodList(classify));
 	}
 	
+	@RequestMapping(value="/food/getDetail")
+	public void getDetail(PrintWriter out, @PathParam("id") int id ){
+		response.setContentType("text/html; charset=utf-8");
+		out.print(index.getDetail(id));
+	}
+	
+	@RequestMapping(value="/food/getCheckInfo")
+	public void getCheckInfo(PrintWriter out,@PathParam("id") int id, @PathParam("number") int number){
+		response.setContentType("text/html; charset=utf-8");
+		out.print(index.getCheckInfo(id, number));
+	}
+	
 	
 }
