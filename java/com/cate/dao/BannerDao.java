@@ -22,7 +22,6 @@ public class BannerDao {
 	public List<Banner> query(){
 		Session session = HibernateUtil.getSession();
 		String hql = "from Banner banner where isOnShelve = 1 order by orderNumber asc";
-		System.out.println(session);
 		List<Banner> list = session.createQuery(hql).list();
 		session.close();
 		return list;

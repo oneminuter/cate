@@ -87,4 +87,7 @@ public class Banner {
 	public void setOnShelveTime(Timestamp onShelveTime) {
 		this.onShelveTime = onShelveTime;
 	}
+	public void setOnShelveTime(Date onShelveTime) {
+		this.onShelveTime = onShelveTime;
+	}
 }
