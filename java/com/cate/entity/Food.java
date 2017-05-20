@@ -29,10 +29,10 @@ public class Food {
 	private Date updateTime;
 	
 	@Column(name="LONGITUDE", precision=10, scale=7)
-	private float longitude;
+	private float longitude;  //纬度
 	
 	@Column(name="LATITUDE", precision=10, scale=7)
-	private float latitude;
+	private float latitude; //经度
 	
 	@Column(name="ADDRESS", length=30)
 	private String address;

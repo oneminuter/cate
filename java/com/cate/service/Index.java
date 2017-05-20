@@ -3,6 +3,8 @@ package com.cate.service;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.cate.entity.Address;
+
 import net.sf.json.JSONObject;
 
 public interface Index {
@@ -14,4 +16,8 @@ public interface Index {
 	public JSONObject getDetail(int id);
 	//获取订单信息
 	public JSONObject getCheckInfo(int id, int number);
+	//添加收货地址
+	public JSONObject addReceiveAddress(Address address);
+	//获取地址列表
+	public JSONObject getAddressList(int userId);
 }

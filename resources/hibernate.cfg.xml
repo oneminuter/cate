@@ -54,5 +54,6 @@
 		<mapping class="com.cate.entity.Banner"/>
 		<mapping class="com.cate.entity.Food"/>
 		<mapping class="com.cate.entity.Order"/>
+		<mapping class="com.cate.entity.Address"/>
 	</session-factory>
 </hibernate-configuration>

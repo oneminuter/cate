@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Entity
-@Table(name="order")
+@Table(name="orders")
 public class Order {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO) //设置主键自动增长
@@ -31,11 +31,14 @@ public class Order {
 	@Column(name="STORE_NAME", length=20, columnDefinition="varchar(20) default ''")
 	private String storeName; //店名
 	
-	@Column(name="NAME", length=30)
-	private String name; //食物名
+	@Column(name="FOOD_NAME", length=30)
+	private String foodName; //食物名
 	
 	@Column(name="PRICE", precision=6, scale=1)
 	private float price; //价格
+	
+	@Column(name="FOOD_COST", precision=6, scale=1)
+	private float foodCost;
 	
 	@Column(name="BUY_NUMBER", length=2)
 	private int buyNumber;
@@ -49,8 +52,11 @@ public class Order {
 	@Column(name="FAVORABLE_PRICE", precision=3, scale=1)
 	private float favorablePrice; //满减优惠价
 	
-	@Column(name="COST", precision=7, scale=1)
-	private float cost; //待支付
+	@Column(name="TOTAL_COST",precision=7, scale=1)
+	private float totalCost; //总花费，不算用代金券抵扣
+	
+	@Column(name="PAYMENT", precision=7, scale=1)
+	private float payment; //待支付
 	
 	@Column(name="PEOPLE_NUMBER", length=2, columnDefinition="int(2) default 1")
 	private int peopleNumber;
@@ -63,7 +69,6 @@ public class Order {
 	
 	@Column(name="ORDER_DATE", columnDefinition="DATETIME")
 	private Date orderDate; //下单日期
-	
 
 	
 	
@@ -73,6 +78,14 @@ public class Order {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public String getOrderId() {
+		return orderId;
+	}
+
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
 	}
 
 	public int getFoodId() {
@@ -99,12 +112,12 @@ public class Order {
 		this.storeName = storeName;
 	}
 
-	public String getName() {
-		return name;
+	public String getFoodName() {
+		return foodName;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setFoodName(String foodName) {
+		this.foodName = foodName;
 	}
 
 	public float getPrice() {
@@ -147,14 +160,6 @@ public class Order {
 		this.favorablePrice = favorablePrice;
 	}
 
-	public float getCost() {
-		return cost;
-	}
-
-	public void setCost(float cost) {
-		this.cost = cost;
-	}
-
 	public int getPeopleNumber() {
 		return peopleNumber;
 	}
@@ -179,14 +184,6 @@ public class Order {
 		this.state = state;
 	}
 
-	public String getOrderId() {
-		return orderId;
-	}
-
-	public void setOrderId(String orderId) {
-		this.orderId = orderId;
-	}
-
 	public Date getOrderDate() {
 		return orderDate;
 	}
@@ -194,4 +191,33 @@ public class Order {
 	public void setOrderDate(Date orderDate) {
 		this.orderDate = orderDate;
 	}
+
+	public float getFoodCost() {
+		return foodCost;
+	}
+
+	public void setFoodCost(float foodCost) {
+		this.foodCost = foodCost;
+	}
+
+	public float getPayment() {
+		return payment;
+	}
+
+	public void setPayment(float payment) {
+		this.payment = payment;
+	}
+
+	public float getTotalCost() {
+		return totalCost;
+	}
+
+	public void setTotalCost(float totalCost) {
+		this.totalCost = totalCost;
+	}
+	
+
+	
+	
+	
 }

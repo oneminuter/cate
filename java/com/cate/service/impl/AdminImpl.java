@@ -23,15 +23,14 @@ import com.cate.util.FileUtil;
 public class AdminImpl implements Admin {
 	@Autowired
 	private Header header;
-	Map<String, Object> map = new HashMap<String, Object>();
+	Map<String, Object> map = null;
 	@Autowired
 	private Banner banner;
-//	@Autowired
-//	private BannerDao bannerDao;
-//	@Autowired
-//	private FoodDao foodDao;
-	private BannerDao bannerDao = new BannerDao();
-	private FoodDao foodDao = new FoodDao();
+	@Autowired
+	private BannerDao bannerDao;
+	@Autowired
+	private FoodDao foodDao;
+	
 	/**
 	 * 添加banner
 	 */
@@ -40,6 +39,8 @@ public class AdminImpl implements Admin {
 		FileUtil fileUtil = new FileUtil();
 		banner.setImgUrl(fileUtil.saveBase64ToFile(img, request));
 		banner.setLinkUrl(link);
+		
+		map = new HashMap<String, Object>();
 		if(bannerDao.add(banner)){
 			header.setSuccess(true);
 		}else{
@@ -57,6 +58,8 @@ public class AdminImpl implements Admin {
 	public JSONObject addFood(Food food, HttpServletRequest request) {
 		FileUtil fileUtil = new FileUtil();
 		food.setImgUrl(fileUtil.saveBase64ToFile(food.getImgUrl(), request));
+		
+		map = new HashMap<String, Object>();
 		if(foodDao.add(food)){
 			header.setSuccess(true);
 		}else{

@@ -35,11 +35,6 @@ public class Banner {
 	@Column(name="ONSHELVE_TIME")
 	private Date onShelveTime;
 
-//	@Column(name="OFFSHELVE_TIME", insertable=false)
-//	private Date offShelveTime;
-
-	
-	
 	
 	public String getImgUrl() {
 		return imgUrl;
