@@ -60,6 +60,7 @@ public class IndexDispatcher {
 	@RequestMapping(value="/food/addReceiveAddress")
 	public void addReceiveAddress(PrintWriter out,
 			@PathParam("userId") int userId,
+			@PathParam("receiverName") String receiverName,
 			@PathParam("province") String province,
 			@PathParam("detailAddress") String detailAddress,
 			@PathParam("receiverGender") int receiverGender,
@@ -68,6 +69,7 @@ public class IndexDispatcher {
 		response.setContentType("text/html; charset=utf-8");
 		
 		address.setUserId(userId);
+		address.setReceiverName(receiverName);
 		address.setProvince(province);
 		address.setDetailAddress(detailAddress);
 		address.setReceiverGender(receiverGender);

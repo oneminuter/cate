@@ -42,7 +42,7 @@ public class AddressDao {
 	@SuppressWarnings({ "unchecked" })
 	public List<Address> queryAll(int userId){
 		Session session = HibernateUtil.getSession();
-		String hql = "from Address address where userId =:userId";
+		String hql = "from Address address where userId =:userId order by id desc";
 		Query<Address> q = session.createQuery(hql);
 		q.setInteger("userId", userId);
 		List<Address> list = q.list();
