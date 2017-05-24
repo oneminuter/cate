@@ -7,7 +7,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import net.sf.json.JSONObject;
 
@@ -19,7 +18,6 @@ import com.cate.model.Header;
 import com.cate.service.Admin;
 import com.cate.util.FileUtil;
 @Service
-@Transactional
 public class AdminImpl implements Admin {
 	@Autowired
 	private Header header;

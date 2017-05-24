@@ -11,7 +11,6 @@ import net.sf.json.JSONObject;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.cate.dao.AddressDao;
 import com.cate.dao.BannerDao;
@@ -21,12 +20,12 @@ import com.cate.entity.Address;
 import com.cate.entity.Banner;
 import com.cate.entity.Food;
 import com.cate.entity.Order;
+import com.cate.model.ConfirmPay;
 import com.cate.model.Header;
 import com.cate.service.Index;
 import com.cate.util.DateUtil;
 
 @Service
-@Transactional
 public class IndexImpl implements Index {
 	@Autowired
 	Header header;
@@ -96,7 +95,7 @@ public class IndexImpl implements Index {
 	@Override
 	public JSONObject getCheckInfo(int id, int number) {
 		Food food = foodDao.queryById(id);
-		String uid = UUID.randomUUID().toString();
+		String uuid = UUID.randomUUID().toString();
 		float totalCost = 0; //总花费，不算代金券抵扣
 		float payment = 0; //待支付
 		
@@ -113,7 +112,7 @@ public class IndexImpl implements Index {
 		order.setFoodCost(food.getPrice() * number);
 		order.setTotalCost(totalCost);
 		order.setPayment(payment);
-		order.setOrderId(uid);
+		order.setOrderId(uuid);
 		order.setFoodId(id);
 		order.setBuyNumber(number);
 		order.setPrice(food.getPrice());
@@ -121,6 +120,7 @@ public class IndexImpl implements Index {
 		order.setState(0);
 		order.setPeopleNumber(1);
 		order.setOther("");
+		order.setReceiverAddress("");
 		
 
 		map = new HashMap<String, Object>();
@@ -164,5 +164,46 @@ public class IndexImpl implements Index {
 		}
 		return JSONObject.fromObject(map);
 	}
-	
+
+	@Override
+	public JSONObject submitCheck(Order order) {
+		map = new HashMap<String, Object>();
+		if( !orderDao.update(order) ){
+			header.setSuccess(false);
+			header.setErrorInfo("提交订单失败");
+		}else{
+			order = orderDao.queryById(order.getId());
+			
+			ConfirmPay cp = null;
+			if(order != null){
+				cp = new ConfirmPay();
+				cp.setOrderId(order.getId());
+				cp.setPayMent(order.getPayment());
+				cp.setStoreName(order.getStoreName());
+				cp.setPayMethod(order.getPayMethod());
+
+				header.setSuccess(true);
+				map.put("body", cp);
+			}else{
+				header.setSuccess(false);
+				header.setErrorInfo("提交订单成功，返回订单信息失败");
+			}
+
+		}
+		map.put("header", header);
+		return JSONObject.fromObject(map);
+	}
+
+	@Override
+	public JSONObject confirmPay(int id) {
+		map = new HashMap<String, Object>();
+		if( !orderDao.updataOrderState(id) ){
+			header.setSuccess(false);
+			header.setErrorInfo("支付失败");
+		}else{
+			header.setSuccess(true);
+		}
+		map.put("header", header);
+		return JSONObject.fromObject(map);
+	}
 }

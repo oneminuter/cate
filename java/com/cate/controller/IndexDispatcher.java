@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.cate.entity.Address;
+import com.cate.entity.Order;
 import com.cate.service.Index;
 
 @Controller
@@ -22,6 +23,8 @@ public class IndexDispatcher {
 	HttpServletResponse response;
 	@Autowired
 	private Address address;
+	@Autowired
+	private Order order;
 	
 	@RequestMapping("")
 	public String index(){
@@ -82,6 +85,29 @@ public class IndexDispatcher {
 	public void getAddressList(PrintWriter out, @PathParam("userId") int userId){
 		response.setContentType("text/html; charset=utf-8");
 		out.print(index.getAddressList(userId));
+	}
+	
+	@RequestMapping(value="/food/submitCheck")
+	private void submitCheck(PrintWriter out,
+			@PathParam("orderId") String orderId,
+			@PathParam("receiverAddress") String receiverAddress,
+			@PathParam("payMethod") String payMethod,
+			@PathParam("peopleNumber") int peopleNumber,
+			@PathParam("other") String other){
+		response.setContentType("text/html; charset=utf-8");
+		
+		order.setOrderId(orderId);
+		order.setReceiverAddress(receiverAddress);
+		order.setPayMethod(payMethod);
+		order.setPeopleNumber(peopleNumber);
+		order.setOther(other);
+		out.print(index.submitCheck(order));
+	}
+	
+	@RequestMapping(value="/food/confirmPay")
+	private void confirmPay(PrintWriter out, @PathParam("orderId") int orderId){
+		response.setContentType("text/html; charset=utf-8");
+		out.print(index.confirmPay(orderId));
 	}
 	
 }

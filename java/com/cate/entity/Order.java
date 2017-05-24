@@ -25,6 +25,9 @@ public class Order {
 	@Column(name="FOOD_ID", length=11)
 	private int foodId; //食物id
 	
+	@Column(name="USER_ID", length=11)
+	private int userId;
+	
 	@Column(name="CASH", precision=4, scale=1)
 	private float cash; //代金券
 	
@@ -69,7 +72,12 @@ public class Order {
 	
 	@Column(name="ORDER_DATE", columnDefinition="DATETIME")
 	private Date orderDate; //下单日期
-
+	
+	@Column(name="RECEIVER_ADDRESS", length=50)
+	private String receiverAddress; //收货地址
+	
+	@Column(name="PAY_METHOD", length=10)
+	private String payMethod;
 	
 	
 	public int getId() {
@@ -214,6 +222,30 @@ public class Order {
 
 	public void setTotalCost(float totalCost) {
 		this.totalCost = totalCost;
+	}
+
+	public String getReceiverAddress() {
+		return receiverAddress;
+	}
+
+	public void setReceiverAddress(String receiverAddress) {
+		this.receiverAddress = receiverAddress;
+	}
+
+	public String getPayMethod() {
+		return payMethod;
+	}
+
+	public void setPayMethod(String payMethod) {
+		this.payMethod = payMethod;
+	}
+
+	public int getUserId() {
+		return userId;
+	}
+
+	public void setUserId(int userId) {
+		this.userId = userId;
 	}
 	
 

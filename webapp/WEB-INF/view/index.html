@@ -1,9 +1,3 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<%
-	String path = request.getContextPath();
-	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
-%>  
 <!doctype html>
 <html lang="en">
 <head>
@@ -13,6 +7,7 @@
 	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 	<title>CATE+</title>
 	<link href="css/mui.min.css" rel="stylesheet" />
+	<link rel="stylesheet" href="css/public.css">
 	<link rel="stylesheet" type="text/css" href="css/index.css"/>
 </head>
 <body>
@@ -171,8 +166,8 @@
 		<!-- content end -->
 
 		<!-- 底部菜单 start -->
-		<nav class="mui-bar mui-bar-tab">
-			<a class="mui-tab-item mui-active" href="#tabbar">
+		<nav class="mui-bar mui-bar-tab" id="footer_menu">
+			<a class="mui-tab-item mui-active" href="###">
 				<svg class="icon icon_home" aria-hidden="true">
 					<use xlink:href="#icon-home"></use>
 				</svg>
@@ -190,7 +185,7 @@
 				</svg>
 				<span class="mui-tab-label">社区</span>
 			</a>
-			<a class="mui-tab-item" href="#tabbar-with-map">
+			<a class="mui-tab-item" href="user">
 				<svg class="icon icon_user" aria-hidden="true">
 					<use xlink:href="#icon-user"></use>
 				</svg>
@@ -201,12 +196,12 @@
 	</div>
 	<!-- mui-content end -->
 
-	<!-- <p class="toast">操作失败描述</p> -->
+	<!-- <p style="background-color: rgba(0, 0, 0, 0.4);width: 200px;position: absolute;top: 20%;z-index: 3;left: 50%;margin-left: -100px;color: rgba(255, 255, 255, 0.65);padding: 8px;border-radius: 8px;text-align: center;">toast弹窗</p> -->
 
 	<!-- 详情 start -->
 	<section class="detail">
 		<!-- foodDetail start -->
-		<a href="javascript:;" class="closeDetailPannel">
+		<a href="javascript:hidden('detail')" class="closeDetailPannel">
 			<svg class="icon icon_left" aria-hidden="true">
 				<use xlink:href="#icon-left"></use>
 			</svg>
@@ -216,6 +211,13 @@
 				<use xlink:href="#icon-share"></use>
 			</svg>
 		</a>
+
+		<div class="loading_box">
+			<i class="loading1"></i>
+			<i class="loading2"></i>
+			<i class="loading3"></i>
+		</div>
+		
 		<div class="foodImg">
 			<img src="img/banner1.jpg" alt="">
 		</div>
@@ -227,7 +229,7 @@
 			<div class="mui-numbox" data-numbox-min="0">
 				<button class="mui-btn mui-btn-numbox-minus" type="button">-</button>
 				<input id="test" class="mui-input-numbox" type="number" value="0">
-				<button class="mui-btn mui-btn-numbox-plus" type="button" disabled="">+</button>
+				<button class="mui-btn mui-btn-numbox-plus" type="button">+</button>
 			</div>
 
 			<h5>商品详情</h5>
@@ -239,7 +241,7 @@
 				   <use xlink:href="#icon-cart"></use>
 				</svg>
 				<h4>￥<span>0</span></h4>
-				<a href="javascript:;">加入购物车</a>
+				<a href="javascript:;" id="addToCartBtn">加入购物车</a>
 			</div>
 		</div>
 		<!-- foodDetail end -->
@@ -249,15 +251,20 @@
 	<!-- 提交订单 start -->
 	<section class="check">
 		<header>
-			<a href="javascript:;" class="closeCheckPannel">
+			<a href="javascript:publicFunc.hidden('check');" class="closeCheckPannel">
 				<svg class="icon icon_left" aria-hidden="true">
 					<use xlink:href="#icon-left"></use>
 				</svg>
 			</a>
 			<h3>提交订单</h3>
 		</header>
+		<div class="loading_box">
+			<i class="loading1"></i>
+			<i class="loading2"></i>
+			<i class="loading3"></i>
+		</div>
 		
-		<div class="addressContainer">
+		<div class="addressContainer" onclick="show('selectAdress')">
 			<span class="l_text">选择收货地址</span>
 			<span class="r_text">
 				<svg class="icon icon_right" aria-hidden="true">
@@ -266,9 +273,9 @@
 			</span>
 		</div>
 	
-		<div class="check_row">
+		<div class="check_row" onclick="show('selectPayMethod')">
 			<span class="l_text">支付方式</span>
-			<span class="r_text">
+			<span class="r_text" id="paymethod">
 				在线支付
 				<svg class="icon icon_right" aria-hidden="true">
 					<use xlink:href="#icon-right"></use>
@@ -312,7 +319,7 @@
 			<span class="r_text">待支付￥14</span>
 		</div>
 
-		<div class="check_row border_top">
+		<div class="check_row border_top" id="peopleNumber">
 			<span class="l-text">用餐人数</span>
 			<span class="r_text">
 				以便商家给您带够餐具
@@ -322,7 +329,7 @@
 			</span>
 		</div>
 
-		<div class="check_row">
+		<div class="check_row" onclick="publicFunc.show('remark')" id="check_remark">
 			<span class="l_text">备注</span>
 			<span class="r_text">
 				口味，偏好要求等
@@ -334,23 +341,22 @@
 
 		<div class="payment">
 			￥14.5 <span>(已优惠￥3)</span>
-			<a href="javascript:;">提交订单</a>
+			<a href="javascript:checkFunc.submit();">提交订单</a>
 		</div>
-		
 	</section>
 	<!-- 提交订单 end -->
 
 	<!-- 选择收货地址 start -->
 	<section class="selectAdress">
 		<header>
-			<a href="javascript:;">
+			<a href="javascript:publicFunc.hidden('selectAdress');" class="closeSelectAdress">
 				<svg class="icon icon_left" aria-hidden="true">
 					<use xlink:href="#icon-left"></use>
 				</svg>
 			</a>
 			<h3>选择收货地址</h3>
 		</header>
-		<div class="addAdress">
+		<div class="addAdress" onclick="publicFunc.show('add_address')">
 			<span class="l_text">新增收货地址</span>
 		</div>
 		<ul class="address_list">
@@ -398,7 +404,7 @@
 	<!-- 增加收货地址 start -->
 	<section class="add_address">
 		<header>
-			<a href="javascript:;">
+			<a href="javascript:publicFunc.hidden('add_address');" class="closeAdd_address">
 				<svg class="icon icon_left" aria-hidden="true">
 					<use xlink:href="#icon-left"></use>
 				</svg>
@@ -407,38 +413,38 @@
 		</header>
 		<h5>联系人</h5>
 		<div class="add_address_row">
-			<input type="text" placeholder="请输入姓名">
+			<input type="text" placeholder="请输入姓名" id="receiverName">
 		</div>
 		<div class="add_address_row">
-			<ul>
-				<li class="selected">
+			<ul id="receiverGender" data-receiverGender=1>
+				<li class="selected" data-gender=1>
 					<span></span>
 					先生
 				</li>
-				<li>
+				<li data-gender=0>
 					<span></span>
 					女士
 				</li>
 			</ul>
 		</div>
 		<div class="add_address_row">
-			<input type="text" placeholder="请输入收货手机号码">
+			<input id="receiverPhone" type="text" placeholder="请输入收货手机号码">
 		</div>
 
 		<h5>收货地址</h5>
 		<div class="add_address_row">
-			<input type="text" placeholder="小区/大厦/学校    例：太原理工大学">
-			<input type="text" placeholder="楼号-门牌号    例：3号楼603">
+			<input id="province" type="text" placeholder="小区/大厦/学校    例：太原理工大学">
+			<input id="detailAdress" type="text" placeholder="楼号-门牌号    例：3号楼603">
 		</div>
 		
-		<a href="javascript:;" class="save_btn">保存</a>
+		<a href="javascript:address.save();" class="save_btn">保存</a>
 	</section>
 	<!-- 增加收货地址 end -->
 
 	<!-- 选择支付方式start -->
 	<section class="selectPayMethod">
 		<header>
-			<a href="javascript:;">
+			<a href="javascript:publicFunc.hidden('selectPayMethod');">
 				<svg class="icon icon_left" aria-hidden="true">
 					<use xlink:href="#icon-left"></use>
 				</svg>
@@ -446,7 +452,7 @@
 			<h3>选择支付方式</h3>
 		</header>
 		<ul>
-			<li class="selected">
+			<li>
 				<span></span>
 				<svg class="icon icon_alipay" aria-hidden="true">
 					<use xlink:href="#icon-alipay"></use>
@@ -471,10 +477,81 @@
 	</section>
 	<!-- 选择支付方式end -->
 
+	<!-- 用餐人数 start -->
+	<section class="people_number">
+		<header>
+			<a href="javascript:publicFunc.hidden('people_number');">
+				<svg class="icon icon_left" aria-hidden="true">
+					<use xlink:href="#icon-left"></use>
+				</svg>
+			</a>
+			<h3>用餐人数</h3>
+		</header>
+		<ul>
+			<li class="selected">1人</li>
+			<li>2人</li>
+			<li>3人</li>
+			<li>4人</li>
+		</ul>
+		<div class="other_number">
+			其他
+			<input type="number">
+			<a href="javascript:peopleNumber.otherNumber();">确定</a>
+		</div>
+	</section>
+	<!-- 用餐人数 end -->
+
+	<!-- 备注 口味偏好 start -->
+	<section class="remark">
+		<header>
+			<a href="javascript:publicFunc.hidden('remark');">
+				<svg class="icon icon_left" aria-hidden="true">
+					<use xlink:href="#icon-left"></use>
+				</svg>
+			</a>
+			<h3>用餐人数</h3>
+			<a class="complete" href="javascript:remark.complete();">完成</a>
+		</header>
+		<div class="otherRemark">
+			<textarea placeholder="口味，偏好等要求"></textarea>
+			<span>0/30</span>
+		</div>
+		<p>常用备注</p>
+		<ul>
+			<li>不吃辣</li>
+			<li>少放辣</li>
+			<li>多放辣</li>
+			<li>不吃蒜</li>
+			<li>不吃香菜</li>
+			<li>不吃葱</li>
+		</ul>
+	</section>
+	<!-- 备注 口味偏好 end -->
+
+	<!-- 确认支付 start -->
+	<section class="confirm_pay">
+		<div class="confirm_body">
+			<h3>确认交易</h3>
+			<p>大三子 ￥30</p>
+			<div class="confirm_pay_btn">
+				<a href="javascript:pay.confirm(id);">支付</a>
+			</div>
+
+			<!-- 
+			<svg class="icon icon_success" aria-hidden="true">
+				<use xlink:href="#icon-success"></use>
+			</svg>
+			<h3>支付成功</h3> -->
+		</div>
+	</section>
+	<!-- 确认支付 end -->
+
+
 	<script src="js/mui.min.js"></script>
 	<script src="js/urlUtil.js" type="text/javascript" charset="utf-8"></script>
 	<script src="js/util.js" type="text/javascript" charset="utf-8"></script>
-	<script src="js/index.js" type="text/javascript" charset="utf-8"></script>
 	<script src="js/iconfont.js"></script>
+	<script src="js/public.js"></script>
+	<script src="js/index.js" type="text/javascript" charset="utf-8"></script>
 </body>
 </html>

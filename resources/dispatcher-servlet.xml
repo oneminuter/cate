@@ -29,9 +29,19 @@
     <!-- 配置静态资源，避免spring拦截器拦截 -->
     <mvc:resources location="/errorpage/" mapping="/errorpage/**" cache-period="31556926"/>
     
+    
+    <bean id="htmlviewResolver"  
+        class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="viewClass" value="com.cate.util.HtmlResourceView"/>
+        <property name="order" value="0"/>  
+        <property name="prefix" value="/WEB-INF/view/" />
+        <property name="suffix" value=".html" />
+        <property name="contentType" value="text/html;charset=utf-8"/>
+    </bean> 
     <bean id="viewResolver"  
-        class="org.springframework.web.servlet.view.InternalResourceViewResolver">  
-        <property name="prefix" value="/WEB-INF/view/" />  
+        class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="order" value="1"/>  
+        <property name="prefix" value="/WEB-INF/view/" />
         <property name="suffix" value=".jsp" />   
     </bean>
     

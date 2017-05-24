@@ -55,6 +55,18 @@ public class FoodDao {
 		Query<Food> q = session.createQuery(hql);
 		q.setInteger("id", id);
 		Food food = (Food) q.uniqueResult();
+		session.close();
 		return food;
+	}
+	
+	@SuppressWarnings({ "deprecation", "rawtypes" })
+	public String getImgUrl(int foodId){
+		Session session = HibernateUtil.getSession();
+		String hql = "select imgUrl from Food f where f.id =:id";
+		Query q = session.createQuery(hql);
+		q.setInteger("id", foodId);
+		String imgUrl = (String) q.uniqueResult();
+		session.close();
+		return imgUrl;
 	}
 }
