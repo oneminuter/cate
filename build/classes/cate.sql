@@ -1,5 +1,5 @@
 ﻿# Host: 127.0.0.1  (Version 5.6.11)
-# Date: 2017-05-22 14:07:45
+# Date: 2017-05-25 01:24:08
 # Generator: MySQL-Front 6.0  (Build 1.182)
 
 
@@ -17,13 +17,13 @@ CREATE TABLE `address` (
   `RECEIVER_GENDER` int(1) DEFAULT '1' COMMENT '收货人性别，0 女， 1 性别',
   `PHONE` varchar(11) DEFAULT NULL COMMENT '收货人手机号码',
   PRIMARY KEY (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=155 DEFAULT CHARSET=utf8 COMMENT='收货地址表';
+) ENGINE=InnoDB AUTO_INCREMENT=235 DEFAULT CHARSET=utf8 COMMENT='收货地址表';
 
 #
 # Data for table "address"
 #
 
-INSERT INTO `address` VALUES (153,1,'太原理工大学明向校区','3号楼603','林廷勇',1,'13546712752'),(154,1,'北京市朝阳区酒仙桥','将府家园110号楼1905','小林',1,'18310433237');
+INSERT INTO `address` VALUES (153,1,'太原理工大学明向校区','3号楼603','林廷勇',1,'13546712752'),(154,1,'北京市朝阳区酒仙桥','将府家园110号楼1905','小林',1,'18310433237'),(234,1,'中山路供销社','3栋601','林廷勇',1,'13546712752');
 
 #
 # Structure for table "banner"
@@ -91,7 +91,7 @@ CREATE TABLE `hibernate_sequence` (
 # Data for table "hibernate_sequence"
 #
 
-INSERT INTO `hibernate_sequence` VALUES (194),(194);
+INSERT INTO `hibernate_sequence` VALUES (281),(281);
 
 #
 # Structure for table "orders"
@@ -102,6 +102,7 @@ CREATE TABLE `orders` (
   `Id` int(11) NOT NULL AUTO_INCREMENT,
   `ORDER_ID` varchar(64) NOT NULL DEFAULT '' COMMENT '订单id',
   `FOOD_ID` int(11) NOT NULL DEFAULT '0' COMMENT '关联的食物id',
+  `USER_ID` int(11) NOT NULL DEFAULT '0' COMMENT '用户id',
   `CASH` float(4,1) DEFAULT NULL COMMENT '代金券',
   `STORE_NAME` varchar(20) DEFAULT NULL COMMENT '店铺名',
   `FOOD_NAME` varchar(30) NOT NULL DEFAULT '' COMMENT '食物名称',
@@ -120,12 +121,13 @@ CREATE TABLE `orders` (
   `RECEIVER_ADDRESS` varchar(50) DEFAULT NULL COMMENT '收货地址',
   `PAY_METHOD` varchar(10) DEFAULT NULL COMMENT '支付方式',
   PRIMARY KEY (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=174 DEFAULT CHARSET=utf8 COMMENT='订单表';
+) ENGINE=InnoDB AUTO_INCREMENT=277 DEFAULT CHARSET=utf8 COMMENT='订单表';
 
 #
 # Data for table "orders"
 #
 
+INSERT INTO `orders` VALUES (271,'c318de00-a155-4783-be44-b0e82540e40a',20,0,2.0,'朝阳酒仙桥店','烤鱼',65.0,65.0,1,1.5,5.0,4.0,67.5,65.5,1,'',0,'2017-05-24 01:02:35','','在线支付'),(272,'d71dcaad-b4fc-4513-a83f-29e1c345a57f',19,0,2.0,'朝阳酒仙桥店','披萨',40.0,40.0,1,1.5,5.0,4.0,42.5,40.5,1,'',0,'2017-05-24 12:03:05','',NULL),(273,'f24620fb-0d28-479e-b958-0169f7557c56',19,0,2.0,'朝阳酒仙桥店','披萨',40.0,40.0,1,1.5,5.0,4.0,42.5,40.5,1,'',0,'2017-05-24 12:04:36','',NULL),(274,'88742b79-ecc6-4ccc-a5de-a158e5e9e034',19,0,2.0,'朝阳酒仙桥店','披萨',40.0,40.0,1,1.5,5.0,4.0,42.5,40.5,2,'少放辣 不吃香菜',1,'2017-05-24 15:43:54','北京市朝阳区酒仙桥\t将府家园110号楼1905\n小林\t先生\t18310433237','微信支付'),(275,'977720a7-0659-4450-bc27-99e03b144e72',20,0,2.0,'朝阳酒仙桥店','烤鱼',65.0,195.0,3,1.5,5.0,4.0,197.5,195.5,4,'不吃蒜',1,'2017-05-24 15:53:05','中山路供销社\t3栋601\n林廷勇\t先生\t13546712752','支付宝'),(276,'78b7347a-67f2-4977-8012-90f0ff5d3341',18,0,2.0,'朝阳酒仙桥店','重庆鸡公煲',35.0,175.0,5,1.5,5.0,4.0,177.5,175.5,4,'少放辣 不吃香菜',1,'2017-05-24 16:46:40','北京市朝阳区酒仙桥\t将府家园110号楼1905\n小林\t先生\t18310433237','微信支付');
 
 #
 # Structure for table "user"
@@ -134,12 +136,12 @@ CREATE TABLE `orders` (
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
   `Id` int(11) NOT NULL AUTO_INCREMENT,
-  `PHONE` decimal(11,0) DEFAULT NULL,
+  `PHONE` varchar(11) NOT NULL DEFAULT '' COMMENT '电话',
   `PASSWORD` varchar(32) NOT NULL DEFAULT '' COMMENT '密码',
   `UERNAME` varchar(15) DEFAULT NULL COMMENT '用户名',
   `CASH` float(4,1) DEFAULT NULL COMMENT '代金券',
   `GENDER` int(1) DEFAULT '0' COMMENT '性别，1 男，0 女',
-  `DEFAULT_ADDRESS_ID` int(11) DEFAULT NULL,
+  `DEFAULT_ADDRESS_ID` int(11) DEFAULT NULL COMMENT '默认地址id',
   PRIMARY KEY (`Id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户表';
 
@@ -147,3 +149,4 @@ CREATE TABLE `user` (
 # Data for table "user"
 #
 
+INSERT INTO `user` VALUES (279,'13546712752','827ccb0eea8a706c4c34a16891f84e7b',NULL,0.0,0,0),(280,'13546712751','827ccb0eea8a706c4c34a16891f84e7b',NULL,0.0,0,0);
