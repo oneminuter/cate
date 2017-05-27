@@ -18,9 +18,16 @@ public class UserDispatcher {
 	HttpServletResponse response;
 	@Autowired
 	UserCenter userCenter;
+	
+	
 	@RequestMapping("")
 	public String user(){
 		return "user";
+	}
+	
+	@RequestMapping("/login")
+	public String login(){
+		return "login";
 	}
 	
 	@RequestMapping(value="/order/getOrderList")
@@ -29,15 +36,20 @@ public class UserDispatcher {
 		out.print(userCenter.getOrderList(userId));
 	}
 	
-	@RequestMapping(value="/register")
-	public void register(PrintWriter out, @PathParam("phone") String phone, @PathParam("password") String password){
+	@RequestMapping(value="/doregister")
+	public void doregister(PrintWriter out, @PathParam("phone") String phone, @PathParam("password") String password){
 		response.setContentType("text/html; charset=utf-8");
 		out.print(userCenter.register(phone, password));
 	}
 	
-	@RequestMapping(value="/login")
-	public void login(PrintWriter out,@PathParam("phone") String phone, @PathParam("password") String password){
-		response.setContentType("text/html; charset=utf-8");
+	@RequestMapping(value="/dologin")
+	public void dologin(PrintWriter out, @PathParam("phone") String phone, @PathParam("password") String password){
+		response.setContentType("application/json; charset=utf-8");
 		out.print(userCenter.login(phone, password));
+	}
+	
+	@RequestMapping(value="/getUserInfo")
+	public void getUserInfo(PrintWriter out, @PathParam("phone") String phone){
+		out.print(userCenter.getUserInfo(phone));
 	}
 }

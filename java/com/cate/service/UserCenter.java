@@ -9,4 +9,6 @@ public interface UserCenter {
 	public JSONObject register(String phone, String password);
 	//登录
 	public JSONObject login(String phone, String password);
+	//获取用户信息
+	public JSONObject getUserInfo(String phone);
 }

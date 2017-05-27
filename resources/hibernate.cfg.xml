@@ -56,5 +56,8 @@
 		<mapping class="com.cate.entity.Order"/>
 		<mapping class="com.cate.entity.Address"/>
 		<mapping class="com.cate.entity.User"/>
+		<mapping class="com.cate.entity.Collection"/>
+		<mapping class="com.cate.entity.Comment"/>
+		<mapping class="com.cate.entity.Community"/>
 	</session-factory>
 </hibernate-configuration>

@@ -1,4 +1,4 @@
-/*轮播 start*/
+轮播 start*/
 .dotcontrol{
 	display: table;
     margin: 0 auto;
@@ -163,8 +163,13 @@
 }
 /*content end*/
 
+/*loading_container start*/
+
+/*loading_container end*/
+
 /*详情 start*/
 .detail,
+.loading_container,
 .check,
 .selectAdress,
 .add_address,
@@ -183,6 +188,13 @@
     padding-top: 42px;
     padding-bottom: 60px;
     display: none;
+}
+.loading_container{
+	display: block;
+}
+.loading_container p{
+	text-align: center;
+	margin-top: 40px;
 }
 .closeDetailPannel,
 .share{
@@ -656,4 +668,4 @@
 	width: 40px;
     height: 60px;
 }
-/*确认支付 end*/
+/*确认支付 end

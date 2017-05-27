@@ -34,6 +34,15 @@ public class User {
 	
 	@Column(name="DEFAULT_ADDRESS_ID", length=11)
 	private int defaultAddressId;
+	
+	@Column(name="BALABCE",precision=5, scale=2)
+	private float balance;
+	
+	@Column(name="ICON", length=255)
+	private String icon;
+	
+	@Column(name="INTEGRAL")
+	private int integral;
 
 	public int getId() {
 		return id;
@@ -89,5 +98,29 @@ public class User {
 
 	public void setDefaultAddressId(int defaultAddressId) {
 		this.defaultAddressId = defaultAddressId;
+	}
+
+	public float getBalance() {
+		return balance;
+	}
+
+	public void setBalance(float balance) {
+		this.balance = balance;
+	}
+
+	public String getIcon() {
+		return icon;
+	}
+
+	public void setIcon(String icon) {
+		this.icon = icon;
+	}
+
+	public int getIntegral() {
+		return integral;
+	}
+
+	public void setIntegral(int integral) {
+		this.integral = integral;
 	}
 }

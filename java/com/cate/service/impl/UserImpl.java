@@ -16,7 +16,7 @@ import com.cate.dao.UserDao;
 import com.cate.entity.Order;
 import com.cate.entity.User;
 import com.cate.model.Header;
-import com.cate.model.Login;
+import com.cate.model.UserInfo;
 import com.cate.model.OrderList;
 import com.cate.service.UserCenter;
 @Service
@@ -102,18 +102,45 @@ public class UserImpl implements UserCenter {
 			}else{
 				header.setSuccess(true);
 				
-				Login login = new Login();
-				login.setCash(user.getCash());
-				login.setDefaultAddressId(user.getDefaultAddressId());
-				login.setId(user.getId());
-				login.setPhone(user.getPhone());
-				login.setUsername(user.getUsername());
+				UserInfo userInfo = new UserInfo();
+				userInfo.setCash(user.getCash());
+				userInfo.setDefaultAddressId(user.getDefaultAddressId());
+				userInfo.setId(user.getId());
+				userInfo.setPhone(user.getPhone());
+				userInfo.setUsername(user.getUsername());
+				userInfo.setBalance(user.getBalance());
 				
-				map.put("body", login);
+				map.put("body", userInfo);
 			}
 		}
 		map.put("header", header);
 		return JSONObject.fromObject(map);
 	}
 
+	@Override
+	public JSONObject getUserInfo(String phone) {
+		map = new HashMap<String, Object>();
+		user = userDao.queryByPhone(phone);
+		
+		if(user == null){
+			header.setSuccess(false);
+			header.setErrorInfo("用户信息为空");
+		}else{
+			header.setSuccess(true);
+			
+			UserInfo userInfo = new UserInfo();
+			userInfo.setId(user.getId());
+			userInfo.setPhone(user.getPhone());
+			userInfo.setUsername(user.getUsername());
+			userInfo.setCash(user.getCash());
+			userInfo.setDefaultAddressId(user.getDefaultAddressId());
+			userInfo.setBalance(user.getBalance());
+			userInfo.setIcon(user.getIcon());
+			userInfo.setIntegral(user.getIntegral());
+			
+			map.put("body", userInfo);
+		}
+		map.put("header", header);
+		return JSONObject.fromObject(map);
+	}
 }

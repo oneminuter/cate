@@ -120,7 +120,7 @@ public class OrderDao {
 	@SuppressWarnings({ "deprecation", "unchecked" })
 	public List<Order> queryByUserId(int userId){
 		Session session = HibernateUtil.getSession();
-		String hql = "from Order o where o.userId =:userId";
+		String hql = "from Order o where o.userId =:userId order by o.id desc";
 		Query<Order> q = session.createQuery(hql);
 		q.setInteger("userId", userId);
 		List<Order> list = q.list();

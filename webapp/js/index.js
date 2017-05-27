@@ -145,6 +145,8 @@
 					if(data.header.success){
 						mui(".list_item_ul")[0].innerHTML = "";
 						index.renderFoodList(data.body);
+						//隐藏初始loading界面
+						mui(".loading_container")[0].style.display = "none";
 					}else{
 						util.toast(data.header.errorInfo);
 					}
@@ -297,6 +299,11 @@ var detailFunc = {
 
 	//加入购物车 / 去结算
 	addTocart: function(id){
+		if( util.getSessionStorage("uid") == null){
+			window.location.href = "login";
+			return false;
+		}
+
 		var number = mui(".mui-input-numbox")[0].value;
 		if(number == 0){
 			detailFunc.countPrice(1);
@@ -466,8 +473,11 @@ var checkFunc = {
 var address = {
 	//添加收货地址 - 保存收货地址
 	save: function(){
-		// var userId = util.setSessionStorage("userId"); //*****************************************需要完善*/
-		var userId = 1;
+		if( util.getSessionStorage("uid") == null){
+			window.location.href = "login";
+			return false;
+		}
+		var userId = util.getSessionStorage("uid");
 		var receiverName = mui("#receiverName")[0].value;
 		var receiverGender = mui("#receiverGender")[0].getAttribute("data-receiverGender");
 		var phone = mui("#receiverPhone")[0].value;
@@ -533,10 +543,14 @@ var address = {
 												<i class="loading2"></i>\
 												<i class="loading3"></i>\
 											</div>';
+		if( util.getSessionStorage("uid") == null ){
+			window.location.href = "login";
+			return false;
+		}
+		console.log(util.getSessionStorage("uid"));
 		mui.ajax(urlUtil.getRequestUrl("getAddressList"), {
 			data: {
-				// userId: util.setSessionStorage("userid")
-				userId: 1
+				userId: util.getSessionStorage("uid")
 			},
 			type: "post",
 			dataType: "json",
@@ -571,7 +585,6 @@ var address = {
 		ul.className = "address_list";
 		for(var i = 0; i < data.length; i++){
 			var li = document.createElement("li");
-			// i == 0 ? li.className = "selected" : "";
 			li.innerHTML = '<span></span>\
 							<div class="addressDetail">\
 								<p>\

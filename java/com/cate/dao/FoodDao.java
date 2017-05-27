@@ -69,4 +69,15 @@ public class FoodDao {
 		session.close();
 		return imgUrl;
 	}
+	
+	@SuppressWarnings({ "rawtypes", "unchecked", "deprecation" })
+	public List<Food> queryRecomment(){
+		Session session = HibernateUtil.getSession();
+		String hql = "from Food f where f.classify !=:classify order by f.id desc";
+		Query q = session.createQuery(hql);
+		q.setString("classify", "meishi");
+		List<Food> list = q.list();
+		session.close();
+		return list;
+	}
 }
