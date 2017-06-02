@@ -35,7 +35,7 @@ public class User {
 	@Column(name="DEFAULT_ADDRESS_ID", length=11)
 	private int defaultAddressId;
 	
-	@Column(name="BALABCE",precision=5, scale=2)
+	@Column(name="BALANCE",precision=5, scale=2)
 	private float balance;
 	
 	@Column(name="ICON", length=255)
