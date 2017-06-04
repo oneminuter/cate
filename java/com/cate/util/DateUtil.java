@@ -9,6 +9,8 @@ import java.util.Date;
 /**
  * 获得当前时间 yyyy-MM-dd HH:mm:ss
  * @version 1.0
+ * 调用  DateUtil.getNowTime() ：Sun Jun 04 16:56:26 CST 2017
+ * 调用 DateUtil.getTimestamp() : 2017-06-04 16:56:26.0
  */
 public class DateUtil {
     
@@ -31,7 +33,6 @@ public class DateUtil {
     }
     /**
      * 获得当前时间
-     * 
      * @return Timestamp
      */
     public static Timestamp getTimestamp() {

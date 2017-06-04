@@ -15,19 +15,47 @@ import com.cate.util.HibernateUtil;
 @Transactional
 public class CommunityDao {
 	/**
+	 * 添加话题
+	 * @param community
+	 * @return
+	 */
+	public int addTopic(Community community){
+		int result = 0;
+		Session session = HibernateUtil.getSession();
+		Transaction transaction = session.beginTransaction();
+		
+		try {
+			session.save(community);
+			result = community.getId();
+			transaction.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+			transaction.rollback();
+		} finally {
+			session.close();
+		}
+		return result;
+	}
+	
+	/**
 	 * 查询所有的话题列表
 	 * @return
 	 */
 	@SuppressWarnings({ "unchecked" })
 	public List<Community> queryAll(){
 		Session session = HibernateUtil.getSession();
-		String hql = "from Community c";
+		String hql = "from Community c order by c.id desc";
 		Query<Community> q = session.createQuery(hql);
 		List<Community> list = q.list();
 		session.close();
 		return list;
 	}
 	
+	/**
+	 * 通过id查询话题
+	 * @param id
+	 * @return
+	 */
 	@SuppressWarnings({ "rawtypes", "deprecation" })
 	public Community queryById(int id){
 		Session session = HibernateUtil.getSession();

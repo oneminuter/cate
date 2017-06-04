@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.cate.entity.Community;
 import com.cate.service.CommunityService;
 
 @Controller
@@ -36,5 +37,20 @@ public class CommunityDispatcher {
 	public void getTopicDetail(PrintWriter out,@PathParam("topicId") int topicId){
 		response.setContentType("text/html; charset=utf-8");
 		out.print(communityService.getTopicDetail(topicId));
+	}
+	
+	@RequestMapping(value="/addTopic")
+	public void addTopic(PrintWriter out, 
+			@PathParam("userId") int userId,
+			@PathParam("classify") String classify,
+			@PathParam("title") String title,
+			@PathParam("content") String content){
+		response.setContentType("text/html; charset=utf-8");
+		Community c = new Community();
+		c.setUserId(userId);
+		c.setClassify(classify);
+		c.setTitle(title);
+		c.setContent(content);
+		out.print(communityService.addTopic(c));
 	}
 }

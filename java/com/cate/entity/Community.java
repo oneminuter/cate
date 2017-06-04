@@ -23,8 +23,8 @@ public class Community {
 	@Column(name="USER_ID")
 	private int userId;
 	
-	@Column(name="TOPIC", length=10)
-	private String topic;
+	@Column(name="CLASSIFY", length=10)
+	private String classify;
 	
 	@Column(name="TITLE", length=30)
 	private String title;
@@ -58,14 +58,6 @@ public class Community {
 
 	public void setUserId(int userId) {
 		this.userId = userId;
-	}
-
-	public String getTopic() {
-		return topic;
-	}
-
-	public void setTopic(String topic) {
-		this.topic = topic;
 	}
 
 	public String getTitle() {
@@ -115,5 +107,13 @@ public class Community {
 
 	public void setIsDelete(int isDelete) {
 		this.isDelete = isDelete;
+	}
+
+	public String getClassify() {
+		return classify;
+	}
+
+	public void setClassify(String classify) {
+		this.classify = classify;
 	}
 }

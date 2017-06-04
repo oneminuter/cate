@@ -18,6 +18,7 @@ import com.cate.entity.User;
 import com.cate.model.CommunityList;
 import com.cate.model.Header;
 import com.cate.service.CommunityService;
+import com.cate.util.DateUtil;
 
 @Service
 public class CommunityServiceImpl implements CommunityService{
@@ -52,7 +53,7 @@ public class CommunityServiceImpl implements CommunityService{
 				
 				cl.setId(c.getId());
 				cl.setUserId(c.getUserId());
-				cl.setTopic(c.getTopic());
+				cl.setClassify(c.getClassify());
 				cl.setTitle(c.getTitle());
 				cl.setContent(c.getContent());
 				cl.setIntroduce(c.getIntroduce());
@@ -87,7 +88,7 @@ public class CommunityServiceImpl implements CommunityService{
 			
 			cl.setId(c.getId());
 			cl.setUserId(c.getUserId());
-			cl.setTopic(c.getTopic());
+			cl.setClassify(c.getClassify());
 			cl.setTitle(c.getTitle());
 			cl.setContent(c.getContent());
 			cl.setIntroduce(c.getIntroduce());
@@ -101,6 +102,47 @@ public class CommunityServiceImpl implements CommunityService{
 			header.setSuccess(true);
 			map.put("body", cl);
 			communityDao.addTopicViewNum(c.getId());
+		}
+		map.put("header", header);
+		return JSONObject.fromObject(map);
+	}
+
+	@Override
+	public JSONObject addTopic(Community c) {
+		map = new HashMap<String, Object>();
+		String introduce = "";
+		if(c.getContent().length() > 60){
+			introduce = c.getContent().substring(0, 61);
+		}else{
+			introduce = c.getContent();
+		}
+		c.setIntroduce(introduce);
+		c.setIsDelete(0);
+		c.setPublishDate(DateUtil.getTimestamp());
+		c.setView(0);
+		
+		int topicId = communityDao.addTopic(c);
+		if( topicId == 0 ){
+			header.setSuccess(false);
+			header.setErrorInfo("增加话题失败");
+		}else{
+			header.setSuccess(true);
+			CommunityList cl = new CommunityList();
+			User user = userDao.queryById(c.getUserId());
+			
+			cl.setAuthor(user.getUsername());
+			cl.setAuthorIcon(user.getIcon());
+			cl.setClassify(c.getClassify());
+			cl.setCommentNum(0);
+			cl.setContent(c.getContent());
+			cl.setId(topicId);
+			cl.setIntroduce(introduce);
+			cl.setIsDelete(c.getIsDelete());
+			cl.setPublishDate(c.getPublishDate());
+			cl.setTitle(c.getTitle());
+			cl.setUserId(c.getUserId());
+			cl.setView(c.getView());
+			map.put("body", cl);
 		}
 		map.put("header", header);
 		return JSONObject.fromObject(map);

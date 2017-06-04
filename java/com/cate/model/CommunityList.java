@@ -5,7 +5,7 @@ public class CommunityList {
 	private int userId;
 	private String author;
 	private String authorIcon;
-	private String topic;
+	private String classify;
 	private String title;
 	private String content;
 	private String introduce;
@@ -32,12 +32,6 @@ public class CommunityList {
 	}
 	public void setAuthorIcon(String authorIcon) {
 		this.authorIcon = authorIcon;
-	}
-	public String getTopic() {
-		return topic;
-	}
-	public void setTopic(String topic) {
-		this.topic = topic;
 	}
 	public String getTitle() {
 		return title;
@@ -86,5 +80,11 @@ public class CommunityList {
 	}
 	public void setAuthor(String author) {
 		this.author = author;
+	}
+	public String getClassify() {
+		return classify;
+	}
+	public void setClassify(String classify) {
+		this.classify = classify;
 	}
 }
