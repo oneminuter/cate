@@ -12,11 +12,11 @@ public interface Index {
 	//获取的轮播数据
 	public JSONObject getSlides(HttpServletRequest request);
 	//获取美食列表
-	public JSONObject getFoodList(String classify);
+	public JSONObject getFoodListByClassify(String classify);
 	//获取详情
 	public JSONObject getDetail(int id);
 	//获取订单信息
-	public JSONObject getCheckInfo(int id, int number);
+	public JSONObject getCheckInfo(int id, int number, int userId);
 	//添加收货地址
 	public JSONObject addReceiveAddress(Address address);
 	//获取地址列表

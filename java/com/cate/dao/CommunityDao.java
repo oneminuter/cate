@@ -67,6 +67,7 @@ public class CommunityDao {
 		return community;
 	}
 	
+	//增加浏览量
 	@SuppressWarnings({ "rawtypes", "deprecation" })
 	public boolean addTopicViewNum(int topicId){
 		Session session = HibernateUtil.getSession();
@@ -84,4 +85,20 @@ public class CommunityDao {
 		}
 		
 	}
+	
+	/**
+	 * 获取内容
+	 * @param id
+	 * @return
+	 */
+	@SuppressWarnings({ "rawtypes", "deprecation" })
+	public String queryContenById(int id){
+		Session session = HibernateUtil.getSession();
+		String hql = "select c.content from Community c.id =:id";
+		Query q = session.createQuery(hql);
+		q.setInteger("id", id);
+		String content = (String) q.uniqueResult();
+		session.close();
+		return content;
+	} 
 }

@@ -80,4 +80,91 @@ public class FoodDao {
 		session.close();
 		return list;
 	}
+	
+	/**
+	 * 获取食物内容介绍
+	 * @param id
+	 * @return
+	 */
+	@SuppressWarnings({ "rawtypes", "deprecation" })
+	public String queryContentByid(int id){
+		Session session = HibernateUtil.getSession();
+		String hql = "select f.content from Food f where f.id =:id";
+		Query q = session.createQuery(hql);
+		q.setInteger("id", id);
+		String content = (String) q.uniqueResult();
+		session.close();
+		return content;
+	}
+	
+	/**
+	 * 删除食物
+	 * @param id
+	 * @return
+	 */
+	@SuppressWarnings({ "unchecked", "deprecation" })
+	public boolean deleteFoodById(int id){
+		Session session = HibernateUtil.getSession();
+		Transaction transaction = session.beginTransaction();
+		String hql = "delete from Food f where f.id =:id";
+		Query<Food> q = session.createQuery(hql);
+		q.setInteger("id", id);
+		boolean result = false;
+		try {
+			if(q.executeUpdate() > 0){
+				result = true;
+				transaction.commit();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			result = false;
+		} finally {
+			session.close();
+		}
+		return result;
+	}
+	
+	/**
+	 * 修改食物信息
+	 * @param id
+	 * @param key
+	 * @param val
+	 * @return
+	 */
+	@SuppressWarnings({ "unchecked", "deprecation" })
+	public boolean modifyFoodById(int id, String key, String val){
+		Session session = HibernateUtil.getSession();
+		Transaction transaction = session.beginTransaction();
+		String hql = "update Food f set f." + key + " =:val where f.id =:id";
+		Query<Food> q = session.createQuery(hql);
+		q.setString("val", val);
+		q.setInteger("id", id);
+		boolean result = false;
+		try {
+			if(q.executeUpdate() > 0){
+				result = true;
+				transaction.commit();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			result = false;
+		} finally {
+			session.close();
+		}
+		return result;
+	}
+	
+	/**
+	 * 获取所有食物列表
+	 * @return
+	 */
+	@SuppressWarnings("unchecked")
+	public List<Food> queryAllFoodList(){
+		Session session = HibernateUtil.getSession();
+		String hql = "from Food f";
+		Query<Food> q =  session.createQuery(hql);
+		List<Food> list = q.list();
+		session.close();
+		return list;
+	}
 }

@@ -60,7 +60,7 @@ public class IndexImpl implements Index {
 	}
 
 	@Override
-	public JSONObject getFoodList(String classify) {
+	public JSONObject getFoodListByClassify(String classify) {
 		List<Food> foodList = foodDao.queryByClassify(classify);
 
 		map = new HashMap<String, Object>();
@@ -93,13 +93,13 @@ public class IndexImpl implements Index {
 	}
 
 	@Override
-	public JSONObject getCheckInfo(int id, int number) {
-		Food food = foodDao.queryById(id);
+	public JSONObject getCheckInfo(int foodId, int number, int userId) {
+		Food food = foodDao.queryById(foodId);
 		String uuid = UUID.randomUUID().toString();
 		float totalCost = 0; //总花费，不算代金券抵扣
 		float payment = 0; //待支付
 		
-		
+		order.setUserId(userId);
 		order.setCash(2);
 		order.setStoreName(food.getStoreName());
 		order.setFoodName(food.getName());
@@ -113,7 +113,7 @@ public class IndexImpl implements Index {
 		order.setTotalCost(totalCost);
 		order.setPayment(payment);
 		order.setOrderId(uuid);
-		order.setFoodId(id);
+		order.setFoodId(foodId);
 		order.setBuyNumber(number);
 		order.setPrice(food.getPrice());
 		order.setOrderDate(DateUtil.getTimestamp());;

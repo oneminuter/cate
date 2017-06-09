@@ -42,10 +42,10 @@ public class IndexDispatcher {
 		out.print(index.getSlides(request));
 	}
 	
-	@RequestMapping(value="/food/getFoodList")
-	public void getFoodList(PrintWriter out, @PathParam("classify") String classify){
+	@RequestMapping(value="/food/getFoodListByClassify")
+	public void getFoodListByClassify(PrintWriter out, @PathParam("classify") String classify){
 		response.setContentType("text/html;charset=utf-8");
-		out.print(index.getFoodList(classify));
+		out.print(index.getFoodListByClassify(classify));
 	}
 	
 	@RequestMapping(value="/food/getDetail")
@@ -55,9 +55,9 @@ public class IndexDispatcher {
 	}
 	
 	@RequestMapping(value="/food/getCheckInfo")
-	public void getCheckInfo(PrintWriter out,@PathParam("id") int id, @PathParam("number") int number){
+	public void getCheckInfo(PrintWriter out,@PathParam("foodId") int foodId, @PathParam("number") int number, @PathParam("userId")int userId){
 		response.setContentType("text/html; charset=utf-8");
-		out.print(index.getCheckInfo(id, number));
+		out.print(index.getCheckInfo(foodId, number, userId));
 	}
 	
 	@RequestMapping(value="/food/addReceiveAddress")

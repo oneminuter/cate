@@ -10,11 +10,17 @@ import org.springframework.stereotype.Service;
 
 import net.sf.json.JSONObject;
 
+import com.cate.dao.CollectionDao;
+import com.cate.dao.CommunityDao;
 import com.cate.dao.FoodDao;
 import com.cate.dao.OrderDao;
 import com.cate.dao.UserDao;
+import com.cate.entity.Collection;
+import com.cate.entity.Community;
+import com.cate.entity.Food;
 import com.cate.entity.Order;
 import com.cate.entity.User;
+import com.cate.model.CollectionList;
 import com.cate.model.Header;
 import com.cate.model.UserInfo;
 import com.cate.model.OrderList;
@@ -31,6 +37,10 @@ public class UserImpl implements UserCenter {
 	UserDao userDao;
 	@Autowired
 	User user;
+	@Autowired
+	CollectionDao collectionDao;
+	@Autowired
+	CommunityDao communityDao;
 	
 	Map<String, Object> map = null;
 
@@ -139,6 +149,59 @@ public class UserImpl implements UserCenter {
 			userInfo.setIntegral(user.getIntegral());
 			
 			map.put("body", userInfo);
+		}
+		map.put("header", header);
+		return JSONObject.fromObject(map);
+	}
+
+	@Override
+	public JSONObject getCollectionList(int userId) {
+		Map<String, Object> map = new HashMap<String,Object>();
+		List<Collection> list = collectionDao.queryByUserId(userId);
+		List<CollectionList> lcl = new ArrayList<CollectionList>();
+		if(list.size() > 0){
+			Collection c = null;
+			CollectionList cl = null;
+			
+			header.setSuccess(true);
+			for(int i = 0; i < list.size(); i++){
+				c = new Collection();
+				cl = new CollectionList();
+				String introduce = null;
+				String title = null;
+				
+				c = list.get(i);
+				
+				if(c.getCommunityId() != 0){
+					cl.setRelationId(c.getCommunityId());
+					cl.setClassify("community");
+					Community community = communityDao.queryById(c.getCommunityId());
+					introduce = community.getContent();
+					title = community.getTitle();
+				}else if(c.getFoodId() != 0){
+					cl.setRelationId(c.getFoodId());
+					cl.setClassify("food");
+					Food food = foodDao.queryById(c.getFoodId());
+					introduce = food.getContent();
+					title = food.getName();
+				}else if(c.getRecommentId() == 0){
+					cl.setRelationId(c.getRecommentId());
+					cl.setClassify("recomment");
+					introduce = "推荐内容还在努力开发中";
+					title = "推荐标题";
+				}else{
+					header.setSuccess(false);
+					header.setErrorInfo("我的收藏数据有错误");
+				}
+				cl.setId(c.getId());
+				cl.setIntroduce(introduce);
+				cl.setTitle(title);
+				lcl.add(cl);
+			}
+			map.put("body", lcl);
+		}else{
+			header.setSuccess(false);
+			header.setErrorInfo("数据库为空");
 		}
 		map.put("header", header);
 		return JSONObject.fromObject(map);

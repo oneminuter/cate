@@ -11,4 +11,6 @@ public interface UserCenter {
 	public JSONObject login(String phone, String password);
 	//获取用户信息
 	public JSONObject getUserInfo(String phone);
+	//获取我的收藏
+	public JSONObject getCollectionList(int userId);
 }

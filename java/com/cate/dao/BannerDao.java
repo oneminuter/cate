@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,4 +53,53 @@ public class BannerDao {
 		return result;
 	}
 	
+	/**
+	 * 修改链接地址
+	 * @param id
+	 * @param url
+	 * @return
+	 */
+	@SuppressWarnings({ "deprecation", "unchecked" })
+	public boolean editLinkUrlById(int id, String url){
+		boolean result = false;
+		Session session = HibernateUtil.getSession();
+		Transaction transaction = session.beginTransaction();
+		
+		String hql = "update Banner b set b.linkUrl =:url where b.id =:id";
+		Query<Banner> q = session.createQuery(hql);
+		q.setString("url", url);
+		q.setInteger("id", id);
+		try {
+			if(q.executeUpdate() > 0){
+				result = true;
+			}
+			transaction.commit();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			session.close();
+		}
+		return result;
+	}
+	
+	@SuppressWarnings({ "unchecked", "deprecation" })
+	public boolean deleteBannerById(int id){
+		Session session = HibernateUtil.getSession();
+		Transaction transaction = session.beginTransaction();
+		String hql = "delete from Banner b where b.id =:id";
+		Query<Banner> q = session.createQuery(hql);
+		q.setInteger("id", id);
+		boolean result = false;
+		try {
+			if(q.executeUpdate() > 0){
+				result = true;
+			}
+			transaction.commit();
+		} catch (Exception e) {
+			result = false;
+		} finally {
+			session.close();
+		}
+		return result;
+	}
 }

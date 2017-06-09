@@ -50,6 +50,13 @@ public class UserDispatcher {
 	
 	@RequestMapping(value="/getUserInfo")
 	public void getUserInfo(PrintWriter out, @PathParam("phone") String phone){
+		response.setContentType("application/json; charset=utf-8");
 		out.print(userCenter.getUserInfo(phone));
+	}
+	
+	@RequestMapping(value="/getCollectionList")
+	public void getCollectionList(PrintWriter out, @PathParam("userId")int userId){
+		response.setContentType("application/json; charset=utf-8");
+		out.print(userCenter.getCollectionList(userId));
 	}
 }

@@ -1,5 +1,6 @@
 package com.cate.entity;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -55,8 +56,9 @@ public class Comment {
 		this.topicId = topicId;
 	}
 
-	public Date getTime() {
-		return time;
+	public String getTime() {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		return sdf.format(time);
 	}
 
 	public void setTime(Date time) {
