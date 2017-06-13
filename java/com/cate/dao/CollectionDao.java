@@ -79,6 +79,7 @@ public class CollectionDao {
 		Query<Collection> q = session.createQuery(hql);
 		q.setInteger("userId", userId);
 		List<Collection> list = q.list();
+		session.close();
 		return list;
 	}
 }

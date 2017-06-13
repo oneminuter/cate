@@ -1,3 +1,7 @@
+/*
+	依赖jquery的ajax,
+	jquery.area.js
+*/
 (function () {
 
 	var page = {
@@ -301,8 +305,8 @@
 			for(var j = 0; j < pannels.length; j++){
 				if(pannels[j].className == parentNodeId){
 					pannels[j].style.display = "block";
-					var childClassName = "." + thisId;
-					pannels[j].querySelector(childClassName).style.display = "block";
+					page.changeChildPanel(thisId, pannels[j].className);
+					break;
 				}
 			}
 		},
@@ -331,8 +335,653 @@
 					break;
 			}
 
+		},
+
+		//切换子菜单对应的面板
+		changeChildPanel: function(childClassName, parentClassName){
+			var child_panels = document.querySelectorAll("." + parentClassName + " > div");
+			child_panels.forEach(function(val, index, arr){
+				val.style.display = "none";
+			});
+
+			child_panels.forEach(function(val, index, arr){
+				if(val.className == childClassName){
+					val.style.display = "block";
+					page.initData(childClassName);
+				}
+			});
+		},
+
+		//数据列表请求初始化
+		initData: function(className){
+			switch(className){
+				case "slideList":
+					slide.getSlideList();
+					break;
+				case "foodList":
+					food.getFoodList();
+					break;
+				case "topicList":
+					topic.getTopicList();
+					break;
+				case "orderList":
+					order.getOrderList();
+					break;
+				case "userList":
+					user.getUserList();
+					break;
+				default: break;
+			}
 		}
-		
 	}
 	page.controller();
 })()
+
+var slide = {
+	getSlideList: function(){
+		$.ajax({
+			url: urlUtil.getRequestUrl("getSlideList"),
+			type: "post",
+			dataType: "json",
+			success: function(data){
+				if(data.header.success){
+					slide.renderSlideList(data.body);
+				}else{
+					util.toast(data.header.errorInfo);
+				}
+			},
+			error: function(error){
+				util.toast(error);
+			}
+		});
+	},
+
+	renderSlideList: function(data){
+		var html = "";
+		data.forEach(function(val, index, arr){
+			var htmlTemplate = '<tr>\
+									<td>' + val.id + '</td>\
+									<td>\
+										<img src="' + val.imgUrl + '" alt="">\
+									</td>\
+									<td>\
+										<input onchange="slide.editLinkUrl(this, ' + val.id + ')" class="urlLink" type="text" value="' + val.linkUrl + '">\
+									</td>\
+									<td>' + val.onShelveTime + '</td>\
+									<td>\
+										<a class="btn_type_2" href="javascript:slide.deleteBanner(' + val.id + ');">删除</a>\
+									</td>\
+								</tr>';
+			html += htmlTemplate;
+		});
+		document.querySelector(".slideList table tbody").innerHTML = html;
+	},
+
+	//修改链接地址
+	editLinkUrl: function(ele, id){
+		var url = ele.value.trim();
+		$.ajax({
+			url: urlUtil.getRequestUrl("editBannerLinkUrl"),
+			data: {
+				a: url,
+				id: id
+			},
+			type:"post",
+			dataType: "json",
+			success: function(data){
+				if(data.header.success){
+					slide.getSlideList();
+				}else{
+					util.toast(data.header.errorInfo);
+				}
+			},
+			error: function(error){
+				util.toast(error);
+			}
+		});
+	},
+
+	deleteBanner: function(id, isSure){
+		isSure = isSure || false;
+		if(isSure != true){
+			publicFunc.popup(id, slide.deleteBanner, "delete");
+		}else{
+			$.ajax({
+				url: urlUtil.getRequestUrl("deleteBanner"),
+				data: {
+					id: id
+				},
+				type: "post",
+				dataType: "json",
+				success: function(data){
+					if(data.header.success){
+						slide.getSlideList();
+					}else{
+						util.toast(data.header.errorInfo);
+					}
+				},
+				error: function(error){
+					util.toast(error);
+				}
+			});
+		}
+	},
+}
+
+var food = {
+	getFoodList: function(){
+		$.ajax({
+			url: urlUtil.getRequestUrl("getAllFoodList"),
+			type: "post",
+			dataType: "json",
+			success: function(data){
+				if(data.header.success){
+					food.renderFoodList(data.body);
+				}else{
+					util.toast(data.header.errorInfo);
+				}
+			},
+			error: function(error){
+				util.toast(error);
+			}
+		});
+	},
+
+	renderFoodList: function(data){
+		var html = "";
+		data.forEach(function(val, index, arr){
+			var htmlTemplate = '<tr>\
+							<td>' + val.id + '</td>\
+							<td>' + food.getClassify(val.classify) + '</td>\
+							<td>\
+								<input onchange="food.modify(' + val.id + ', \'name\', this)" type="text" value="' + val.name + '">\
+							</td>\
+							<td>\
+								<img class="foodImg" src="' + val.imgUrl + '" alt="">\
+							</td>\
+							<td>\
+								<input onchange="food.modify(' + val.id + ', \'price\', this)" type="text" value="' + val.price + '">\
+							</td>\
+							<td>\
+								<input onchange="food.modify(' + val.id + ', \'reachPrice\', this)" type="text" value="' + val.reachPrice + '">\
+							</td>\
+							<td>\
+								<input onchange="food.modify(' + val.id + ', \'favorablePrice\', this)" type="text" value="' + val.favorablePrice + '">\
+							</td>\
+							<td>\
+								<input onchange="food.modify(' + val.id + ', \'otherFavorable\', this)" type="text" value="' + val.otherFavorable + '">\
+							</td>\
+							<td>\
+								<input onchange="food.modify(' + val.id + ', \'address\', this)" type="text" value="' + val.address + '">\
+							</td>\
+							<td>\
+								<input onchange="food.modify(' + val.id + ', \'detailAddress\', this)" type="text" value="' + val.detailAddress + '">\
+							</td>\
+							<td>\
+								<input onchange="food.modify(' + val.id + ', \'storeName\', this)" type="text" value="' + val.storeName + '">\
+							</td>\
+							<td>\
+								<a class="btn_type_2" href="javascript:food.deleteFood(' + val.id + ');">删除</a>\
+							</td>\
+						</tr>';
+			html += htmlTemplate;
+		});
+		document.querySelector(".foodList table tbody").innerHTML = html;
+	},
+
+	//修改食物信息
+	modify: function(id, key, ele){
+		$.ajax({
+			url: urlUtil.getRequestUrl("modifyFoodInfo"),
+			data: {
+				id: id,
+				key: key,
+				val: ele.value
+			},
+			type: "post",
+			dataType: "json",
+			success: function(data){
+				if(data.header.success){
+					food.getFoodList();
+				}else{
+					util.toast(data.header.errorInfo);
+				}
+			},
+			error: function(error){
+				util.toast(error);
+			}
+		});
+	},
+
+	//食物分类转换
+	getClassify: function(classify){
+		var result = "";
+		switch(classify){
+			case "meishi":
+				result = "美食";
+				break;
+			case "shicai":
+				result = "食材";
+				break;
+			case "shipu":
+				result = "食谱";
+				break;
+			default :
+				result = "其他";
+				break;
+		}
+		return result;
+	},
+
+	deleteFood: function(id, isSure){
+		isSure = isSure || false;
+		if(isSure != true){
+			publicFunc.popup(id, food.deleteFood, "delete");
+		}else{
+			$.ajax({
+				url: urlUtil.getRequestUrl("deleteFood"),
+				data:{
+					id: id
+				},
+				type: "post",
+				dataType: "json",
+				success: function(data){
+					if(data.header.success){
+						food.getFoodList();
+					}else{
+						util.toast(data.header.errorInfo);
+					}
+				},
+				error: function(error){
+					url.toast(error);
+				}
+			});
+		}
+	}
+}
+
+// 公共代码
+var publicFunc = {
+	popup: function(id, func, html){
+		var div = document.createElement("div");
+		div.className = "popup";
+		div.innerHTML = publicFunc.getHtml(id, html);
+		publicFunc.confirmPanel = div;
+		publicFunc.callback = func;
+		document.body.appendChild(div);
+	},
+	sure: function(id){
+		publicFunc.callback(id, true);
+		publicFunc.cancel();
+		publicFunc.init();
+	},
+	cancel: function(){
+		document.body.removeChild(publicFunc.confirmPanel);
+		publicFunc.init();
+	},
+	//初始化，恢复 publicFunc 的 publicFunc.callback 和 publicFunc.confirmPanel
+	init: function(){
+		publicFunc.callback = publicFunc.confirmPanel = null;
+	},
+
+	//删除确认框
+	delete: function(id){
+		return '<div class="confirm_body">\
+					<h1>是否删除？</h1>\
+					<div class="comfirm_btn">\
+						<a class="btn_type_1" href="javascript:publicFunc.sure(' + id + ');">确定</a>\
+						<a class="btn_type_1" href="javascript:publicFunc.cancel();">取消</a>\
+					</div>\
+				</div>';
+	},
+
+	//修改订单状态
+	changeOrderState: function (id) {
+		return '<div class="stateBody">\
+					<h1>修改订单状态</h1>\
+					<label>\
+						<input onchange="order.selectState(1)" type="radio" name="orderState" value="1">\
+						已支付\
+					</label>\
+					<label>\
+						<input onchange="order.selectState(0)" type="radio" name="orderState">\
+						未支付\
+					</label>\
+					<label>\
+						<input onchange="order.selectState(-1)" type="radio" name="orderState">\
+						取消订单\
+					</label>\
+					<div class="btn_container">\
+						<a class="btn_type_1" href="javascript:publicFunc.sure(' + id + ');">确定</a>\
+						<a class="btn_type_1" href="javascript:javascript:publicFunc.cancel(this);">取消</a>\
+					</div>\
+				</div>';
+	},
+
+	getHtml: function(id, key){
+		for(var item in publicFunc){
+			if(item == key){
+				return publicFunc[item](id);
+			}
+		}
+	},
+}
+
+var topic = {
+	getTopicList: function(){
+		$.ajax({
+			url: urlUtil.getRequestUrl("getCommunityList"),
+			type: "post",
+			dataType: "json",
+			success: function(data){
+				if(data.header.success){
+					topic.renderTopicList(data.body);
+				}else{
+					util.toast(data.header.errorInfo);
+				}
+			},
+			error: function(error){
+				util.toast(error);
+			}
+		});
+	},
+
+	renderTopicList: function(data){
+		var html = "";
+		data.forEach(function(val, index, arr){
+			var htmlTemplate = '<tr>\
+									<td>' + val.id + '</td>\
+									<td>' + val.title + '</td>\
+									<td>' + val.classify + '</td>\
+									<td>' + val.introduce + '</td>\
+									<td>' + val.author + '</td>\
+									<td>' + val.publishDate + '</td>\
+									<td>' + val.view + '</td>\
+									<td>' + val.commentNum + '</td>\
+									<td>\
+										<a class="btn_type_2" href="javascript:topic.deleteTopic(' + val.id + ');">删除</a>\
+									</td>\
+								</tr>';
+			html += htmlTemplate;
+		});
+		document.querySelector(".topicList tbody").innerHTML = html;
+	},
+
+	deleteTopic: function(id, isSure){
+		isSure = isSure || false;
+		if( !isSure ){
+			publicFunc.popup(id, topic.deleteTopic, "delete");
+		}else{
+			$.ajax({
+				url: urlUtil.getRequestUrl("deleteTopic"),
+				data: {
+					id: id
+				},
+				type: "post",
+				dataType: "json",
+				success: function(data){
+					if(data.header.success){
+						topic.getTopicList();
+					}else{
+						util.toast(data.header.errorInfo);
+					}
+				},
+				error: function(error){
+					util.toast(error);
+				}
+			});
+		}
+	}
+}
+
+var order = {
+	getOrderList: function(){
+		$.ajax({
+			url: urlUtil.getRequestUrl("getAllOrderList"),
+			type: "post",
+			dataType: "json",
+			success: function(data){
+				if(data.header.success){
+					order.renderOrderList(data.body);
+				}else{
+					util.toast(data.header.errorInfo);
+				}
+			},
+			error: function(error){
+				util.toast(error);
+			}
+		});
+	},
+	renderOrderList: function(data){
+		var html = "";
+		data.forEach(function(val, index, arr){
+			var htmlTemplate = '<tr>\
+									<td>' + val.id + '</td>\
+									<td>' + val.orderId + '</td>\
+									<td>' + val.phone + '</td>\
+									<td>' + val.foodName + ' </td>\
+									<td>' + val.payment + '</td>\
+									<td>' + val.orderDate + '</td>\
+									<td>' + val.payMethod + '</td>\
+									<td>' + order.transformOrderState(val.state) + '</td>\
+									<td>\
+										<a class="btn_type_1" href="javascript:order.modifyState(' + val.id + ');">修改订单状态</a>\
+									</td>\
+								</tr>';
+			html += htmlTemplate;
+		});
+		document.querySelector(".orderList tbody").innerHTML = html;
+	},
+	//修改订单状态
+	modifyState: function(id, isPopup){
+		if( !isPopup ){
+			publicFunc.popup(id, order.modifyState, "changeOrderState");
+		}else{
+			if(order.state == null){
+				util.toast("请选择订单状态");
+			}else{
+				$.ajax({
+					url: urlUtil.getRequestUrl("modifyOrderState"),
+					data: {
+						id: id,
+						state: order.state
+					},
+					type: "post",
+					dataType: "json",
+					success: function(data){
+						if(data.header.success){
+							order.getOrderList();
+							//修改成功之后，需将state属性恢复为null
+							order.state = null;
+						}else{
+							util.toast(data.header.errorInfo);
+						}
+					},
+					error: function(error){
+						util.toast(error);
+					}
+				});
+			}
+		}
+	},
+	//弹出层-选择状态
+	selectState: function(state){
+		order.state = state;
+	},
+
+	transformOrderState: function (state) {
+		var result = "";
+		switch(state){
+			case 1:
+				result = "已支付";
+				break;
+			case 0:
+				result = "未支付";
+				break;
+			case -1:
+				result = "取消订单";
+				break;
+			default :
+				break;
+		}
+		return result;
+	}
+}
+
+var user = {
+
+	userInfo:[],
+
+	//判断用户信息是否已存在,如果存在返回索引，否则返回-1
+	userIsExist: function(id){
+		var result = -1;
+		for(var i = 0; i < user.userInfo.length; i++){
+			if(user.userInfo[i].id == id){
+				result = i;
+				break;
+			}
+		}
+		return result;
+	},
+
+	//显示保存按钮
+	showSaveBtn: function (id, ele, key) {
+		var val = ele.value;
+		ele.parentNode.parentNode.querySelector(".save_btn").style.display = "inline-block";
+		var index = user.userIsExist(id);
+		if(index != -1){
+			user.userInfo[index][key] = val;
+		}else{
+			var obj = {};
+			obj.id = id;
+			obj[key] = val;
+			user.userInfo.push(obj);
+		}
+	},
+
+	//按id获取改变的用户信息
+	getUserInfo: function(id){
+		var userInfoObj = {};
+		for(var i = 0; i < user.userInfo.length; i++){
+			if(user.userInfo[i].id == id){
+				userInfoObj = user.userInfo[i];
+				break;
+			}
+		}
+		return userInfoObj;
+	},
+
+	saveEdit: function (id) {
+		var obj = user.getUserInfo(id);
+		$.ajax({
+			url: urlUtil.getRequestUrl("saveEditUserInfo"),
+			data:obj,
+			type: "post",
+			dataType: "json",
+			success: function(data){
+				if(data.header.success){
+					user.getUserList();
+				}else{
+					util.toast(data.header.errorInfo);
+				}
+			},
+			error: function(error){
+				util.toast(error);
+			}
+
+		});
+	},
+
+	changePhoto: function (id) {
+		
+	},
+
+	deleteUser: function (id, isSure) {
+		isSure = isSure || false;
+		if(!isSure){
+			publicFunc.popup(id, user.deleteUser, "delete");
+		}else{
+			$.ajax({
+				url: urlUtil.getRequestUrl("deleteUser"),
+				data: {
+					id: id
+				},
+				type: "post",
+				dataType: "json",
+				success: function(data){
+					if(data.header.success){
+						user.deleteUser();
+					}else{
+						util.toast(data.header.errorInfo);
+					}
+				},
+				error: function(error){
+					util.toast(error);
+				}
+			});
+		}
+	},
+
+	getUserList: function(){
+		$.ajax({
+			url: urlUtil.getRequestUrl("getUserList"),
+			type: "post",
+			dataType: "json",
+			success: function(data){
+				if(data.header.success){
+					user.renderUserList(data.body);
+				}else{
+					util.toast(data.header.errorInfo);
+				}
+			},
+			error: function(error){
+				util.toast(error);
+			}
+		});
+	},
+	renderUserList: function(data){
+		var html = "";
+		data.forEach(function(val, index, arr){
+			var htmlTemplate = '<tr>\
+									<td>' + val.id + '</td>\
+									<td>\
+										<input onchange="user.showSaveBtn(' + val.id + ', this, \'username\')" type="text" value="' + val.username + '">\
+									</td>\
+									<td>\
+										<img src="img/user.svg" alt="">\
+									</td>\
+									<td>\
+										<input onchange="user.showSaveBtn(' + val.id + ', this, \'phone\')" type="number" value="' + val.phone + '">\
+									</td>\
+									<td>\
+										<select onchange="user.showSaveBtn(' + val.id + ', this, \'gender\')">\
+											<option value="1" ' + (val.gender == 1 ? "selected='true'" : "") + '>男</option>\
+											<option value="0" ' + (val.gender == 1 ? "" : "selected='true'") + '>女</option>\
+										</select>\
+									</td>\
+									<td>\
+										<select onchange="user.showSaveBtn(' + val.id + ', this, \'isAdmin\')">\
+											<option value="0" ' + (val.isAdmin == 1 ? "" : "selected='true'") + '>普通成员</option>\
+											<option value="1" ' + (val.isAdmin == 1 ? "selected='true'" : "") + '>管理员</option>\
+										</select>\
+									</td>\
+									<td>\
+										<input onchange="user.showSaveBtn(' + val.id + ', this, \'balance\')" type="number" value="' + val.balance + '">\
+									</td>\
+									<td>\
+										<input onchange="user.showSaveBtn(' + val.id + ', this, \'cash\')" type="number" value="' + val.cash + '">\
+									</td>\
+									<td>\
+										<input onchange="user.showSaveBtn(' + val.id + ', this, \'integral\')" type="number" value="' + val.integral + '">\
+									</td>\
+									<td>\
+										<a class="save_btn btn_type_3" href="javascript:user.saveEdit(' + val.id + ');">保存</a>\
+										<a class="btn_type_1" href="javascript:user.changePhoto(' + val.id + ');">修改头像</a>\
+										<a class="btn_type_2" href="javascript:user.deleteUser(' + val.id + ');">删除</a>\
+									</td>\
+								</tr>';
+			html += htmlTemplate;
+		});
+		document.querySelector(".userList table tbody").innerHTML = html;
+	}
+}

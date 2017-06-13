@@ -44,14 +44,13 @@ public class UserImpl implements UserCenter {
 	
 	Map<String, Object> map = null;
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public JSONObject getOrderList(int userId) {
 		map = new HashMap<String, Object>();
 		List<Order> list = orderDao.queryByUserId(userId);
 		List<OrderList> orderList = null;
 		String imgUrl = null;
 		if(list.size() > 0){
-			orderList = new ArrayList();
+			orderList = new ArrayList<OrderList>();
 			for(int i = 0; i < list.size(); i++){
 				Order order = list.get(i);
 				

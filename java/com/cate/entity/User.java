@@ -43,6 +43,9 @@ public class User {
 	
 	@Column(name="INTEGRAL")
 	private int integral;
+	
+	@Column(name="IS_ADMIN",columnDefinition="TINYINT")
+	private int isAdmin;
 
 	public int getId() {
 		return id;
@@ -122,5 +125,13 @@ public class User {
 
 	public void setIntegral(int integral) {
 		this.integral = integral;
+	}
+
+	public int getIsAdmin() {
+		return isAdmin;
+	}
+
+	public void setIsAdmin(int isAdmin) {
+		this.isAdmin = isAdmin;
 	}
 }

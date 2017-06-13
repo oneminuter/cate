@@ -24,14 +24,16 @@ public class AddressDao {
 	public boolean add(Address address){
 		boolean result = false;
 		Session session = HibernateUtil.getSession();
-		Transaction transation  = session.beginTransaction();
+		Transaction transaction  = session.beginTransaction();
 		
 		try {
 			session.save(address);
-			transation.commit();
+			transaction.commit();
 			result = true;
 		} catch (Exception e) {
 			e.printStackTrace();
+			transaction.rollback();
+			result = false;
 		} finally {
 			session.close();
 		}

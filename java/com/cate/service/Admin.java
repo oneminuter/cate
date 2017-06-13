@@ -1,5 +1,7 @@
 package com.cate.service;
 
+import java.util.Enumeration;
+
 import javax.servlet.http.HttpServletRequest;
 
 import com.cate.entity.Food;
@@ -23,4 +25,18 @@ public interface Admin {
 	public JSONObject modifyFoodInfo(int id, String key, String val);
 	//获取所有食物列表
 	public JSONObject getAllFoodList();
+	//删除话题
+	public JSONObject deleteTopic(int id);
+	//获取所有订单列表
+	public JSONObject getAllOrderList();
+	//修改订单状态
+	public JSONObject modifyOrderState(int id, int state);
+	//获取用户列表
+	public JSONObject getUserList();
+	//保存用户信息
+	public JSONObject saveEditUser(int id, Enumeration<String> paraNames, HttpServletRequest request);
+	//删除用户
+	public JSONObject deleteUser(int id);
+	//上传用户头像
+	public JSONObject uploadUserIcon(int id, String base64,HttpServletRequest request);
 }

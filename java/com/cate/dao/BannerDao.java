@@ -47,6 +47,8 @@ public class BannerDao {
 			result = true;
 		} catch (Exception e) {
 			e.printStackTrace();
+			transaction.rollback();
+			result = false;
 		}finally{
 			session.close();
 		}
@@ -71,11 +73,13 @@ public class BannerDao {
 		q.setInteger("id", id);
 		try {
 			if(q.executeUpdate() > 0){
+				transaction.commit();
 				result = true;
 			}
-			transaction.commit();
 		} catch (Exception e) {
 			e.printStackTrace();
+			transaction.rollback();
+			result = false;
 		} finally {
 			session.close();
 		}
@@ -93,9 +97,11 @@ public class BannerDao {
 		try {
 			if(q.executeUpdate() > 0){
 				result = true;
+				transaction.commit();
 			}
-			transaction.commit();
 		} catch (Exception e) {
+			e.printStackTrace();
+			transaction.rollback();
 			result = false;
 		} finally {
 			session.close();

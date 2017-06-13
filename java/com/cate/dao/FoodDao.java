@@ -29,6 +29,8 @@ public class FoodDao {
 			result = true;
 		} catch (Exception e) {
 			e.printStackTrace();
+			transaction.rollback();
+			result = false;
 		}finally{
 			session.close();
 		}

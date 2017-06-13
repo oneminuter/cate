@@ -1,6 +1,7 @@
 package com.cate.controller;
 
 import java.io.PrintWriter;
+import java.util.Enumeration;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -118,6 +119,49 @@ public class AdminDispatcher {
 	public void getAllFoodList(PrintWriter out){
 		response.setContentType("text/html;charset=utf-8");
 		out.print(admin.getAllFoodList());
+	}
+	
+	@RequestMapping(value="/community/deleteTopic",method=RequestMethod.POST)
+	public void deleteTopic(PrintWriter out,@PathParam("id")int id){
+		response.setContentType("text/html;charset=utf-8");
+		out.print(admin.deleteTopic(id));
+	}
+	
+	@RequestMapping(value="/order/getAllOrderList",method=RequestMethod.POST)
+	public void getAllOrderList(PrintWriter out){
+		response.setContentType("text/html;charset=utf-8");
+		out.print(admin.getAllOrderList());
+	}
+	
+	@RequestMapping(value="/order/modifyOrderState",method=RequestMethod.POST)
+	public void modifyOrderState(PrintWriter out, @PathParam("id")int id, @PathParam("state")int state){
+		response.setContentType("text/html;charset=utf-8");
+		out.print(admin.modifyOrderState(id, state));
+	}
+	
+	@RequestMapping(value="/user/getUserList", method=RequestMethod.POST)
+	public void getUserList(PrintWriter out){
+		response.setContentType("text/html; charset=utf-8");
+		out.print(admin.getUserList());
+	}
+	@RequestMapping(value="/user/saveEditUserInfo", method=RequestMethod.POST)
+	public void saveEditUserInfo(PrintWriter out, @PathParam("id")int id){
+		response.setContentType("text/html; charset=utf-8");
+		
+		Enumeration<String> paraNames=request.getParameterNames();
+		out.print(admin.saveEditUser(id, paraNames, request));
+	}
+	
+	@RequestMapping(value="/user/deleteUser", method=RequestMethod.POST)
+	public void deleteUser(PrintWriter out, @PathParam("id")int id){
+		response.setContentType("text/html; charset=utf-8");
+		out.print(admin.deleteUser(id));
+	}
+	
+	@RequestMapping(value="/user/uploadUserIcon", method=RequestMethod.POST)
+	public void uploadUserIcon(PrintWriter out, @PathParam("id")int id, @PathParam("imgBase64")String imgBase64){
+		response.setContentType("text/html; charset=utf-8");
+		out.print(admin.uploadUserIcon(id, imgBase64, request));
 	}
 	
 }

@@ -19,14 +19,16 @@ public class OrderDao {
 	public boolean add(Order order){
 		boolean result = false;
 		Session session = HibernateUtil.getSession();
-		Transaction transation = session.beginTransaction();
+		Transaction transaction = session.beginTransaction();
 		
 		try{
 			session.save(order);
-			transation.commit();
+			transaction.commit();
 			result = true;
 		} catch (Exception e){
 			e.printStackTrace();
+			transaction.rollback();
+			result = false;
 		}finally{
 			session.close();
 		}
@@ -89,7 +91,7 @@ public class OrderDao {
 	}
 	
 	/**
-	 * 更新订单状态
+	 * 支付成功之后， 更新订单状态
 	 * @param id
 	 * @return
 	 */
@@ -126,5 +128,38 @@ public class OrderDao {
 		List<Order> list = q.list();
 		session.close();
 		return list;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<Order> queryAllOrder(){
+		Session session = HibernateUtil.getSession();
+		String hql = "from Order o";
+		List<Order> list = session.createQuery(hql).list();
+		session.close();
+		return list;
+	}
+	
+	@SuppressWarnings({ "unchecked", "deprecation" })
+	public boolean modifyOrderState(int id, int state){
+		Session session = HibernateUtil.getSession();
+		Transaction transaction = session.beginTransaction();
+		String hql = "update Order o set o.state =:state where o.id =:id";
+		Query<Order> q = session.createQuery(hql);
+		q.setInteger("state", state);
+		q.setInteger("id", id);
+		boolean result = false;
+		try {
+			if(q.executeUpdate() > 0){
+				transaction.commit();
+				result = true;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			transaction.rollback();
+			result = false;
+		} finally {
+			session.close();
+		}
+		return result;
 	}
 }

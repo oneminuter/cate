@@ -101,4 +101,27 @@ public class CommunityDao {
 		session.close();
 		return content;
 	} 
+	
+	@SuppressWarnings({ "unchecked", "deprecation" })
+	public boolean deleteTopicById(int id){
+		boolean result = false;
+		Session session = HibernateUtil.getSession();
+		Transaction transaction = session.beginTransaction();
+		String hql = "delete from Community c where c.id =:id";
+		Query<Community> q = session.createQuery(hql);
+		q.setInteger("id", id);
+		try {
+			if(q.executeUpdate() > 0){
+				result = true;
+				transaction.commit();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			transaction.rollback();
+			result = false;
+		} finally {
+			session.close();
+		}
+		return result;
+	}
 }

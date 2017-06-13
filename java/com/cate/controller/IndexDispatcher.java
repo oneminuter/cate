@@ -30,6 +30,10 @@ public class IndexDispatcher {
 	public String index(){
 		return "index";
 	}
+	@RequestMapping("/test")
+	public String test(){
+		return "test";
+	}
 	/**
 	 * 请求banner列表
 	 * @param out

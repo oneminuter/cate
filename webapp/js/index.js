@@ -6,6 +6,14 @@
 			// index.getFoodList();  //两个同时请求会导致resultSet关闭异常
 			index.bind();
 		},
+
+		init: function(){
+			var clientHeight = document.documentElement.clientHeight;
+			var bannerHeight = mui(".mui-slider.banner")[0].offsetHeight;
+			var classifyHeight = mui(".classify_title_container")[0].offsetHeight;
+			var footerHeight = mui("#footer_menu")[0].offsetHeight;
+			mui(".list_container")[0].style.height = (clientHeight - bannerHeight - classifyHeight - footerHeight) + "px";
+		},
 		
 		//轮播初始化
 		initSlide:function(){
@@ -63,6 +71,9 @@
 			gallery.slider({
 			  interval:5000//自动轮播周期，若为0则不自动播放，默认为0；
 			});
+
+			//banner加载完，再初始化界面
+			index.init();
 		},
 
 		//事件绑定
@@ -135,7 +146,7 @@
 		//获取分类列表
 		getFoodList: function(classify){
 			classify = classify || "meishi";
-			mui.ajax(urlUtil.getRequestUrl("getFoodList"), {
+			mui.ajax(urlUtil.getRequestUrl("getFoodListByClassify"), {
 				data: {
 					classify: classify
 				},
@@ -191,7 +202,7 @@
 				li.innerHTML = htmlTemplate;
 				li.addEventListener("tap", function(){
 					if(this.getAttribute("data-classify") != "meishi"){
-						console.log("教程");
+						detailFunc.getOtherDetail(this.id);
 					}else{
 						//获取详情
 						detailFunc.getDetail(this.id);
@@ -235,7 +246,7 @@ var detailFunc = {
 				}
 			},
 			error:function(xhr,type,errorThrown){
-				util.toast(type + "错误，获取食物列表，请稍后重试");
+				util.toast(type + "错误，获取食物详情错误，请稍后重试");
 			}
 		});
 	},
@@ -300,7 +311,8 @@ var detailFunc = {
 	//加入购物车 / 去结算
 	addTocart: function(id){
 		if( util.getSessionStorage("uid") == null){
-			window.location.href = "login";
+			util.toast("您还没有登录，请先登录");
+			window.location.href = "user";
 			return false;
 		}
 
@@ -311,13 +323,53 @@ var detailFunc = {
 		}else{
 			checkFunc.getCheckInfo(id, number);
 		}
+	},
+
+	//获取食材、食谱、其他的详情
+	getOtherDetail: function(id){
+		mui(".o_detail")[0].style.display = "block";
+		mui(".main")[0].innerHTML = '<div class="loading_box">\
+										<i class="loading1"></i>\
+										<i class="loading2"></i>\
+										<i class="loading3"></i>\
+									</div>';
+		mui.ajax(urlUtil.getRequestUrl("getDetail"), {
+			data: {
+				id: id
+			},
+			dataType: "json",
+			type:"post",
+			success:function(data){
+				if(data.header.success){
+					detailFunc.renderOtherDetail(data.body);
+				}else{
+					util.toast(data.header.errorInfo);
+				}
+			},
+			error:function(xhr,type,errorThrown){
+				util.toast(type + "错误，获取食物详情错误，请稍后重试");
+			}
+		});
+	},
+
+	//渲染食材、食谱、其他的详情
+	renderOtherDetail: function(data){
+		mui(".main")[0].innerHTML = '<div class="head">\
+										<div class="o_thumbnail">\
+											<img src="' + data.imgUrl + '" alt="">\
+										</div>\
+										<h1>' + data.name + '</h1>\
+									</div>\
+									<div class="o_content">\
+										' + data.content + '\
+									</div>';
 	}
 } 
 //detailFunc end
 
 // checkFunc start
 var checkFunc = {
-	getCheckInfo: function(id, number){
+	getCheckInfo: function(foodId, number){
 		mui(".check")[0].style.display = "block";
 		mui(".check")[0].innerHTML = '<header>\
 											<a href="javascript:publicFunc.hidden(\'check\');" class="closeCheckPannel">\
@@ -334,7 +386,8 @@ var checkFunc = {
 										</div>';
 		mui.ajax(urlUtil.getRequestUrl("getCheckInfo"), {
 			data: {
-				id: id,
+				userId: util.getSessionStorage("uid"),
+				foodId: foodId,
 				number: number
 			},
 			type: "post",
@@ -480,17 +533,17 @@ var address = {
 		var userId = util.getSessionStorage("uid");
 		var receiverName = mui("#receiverName")[0].value;
 		var receiverGender = mui("#receiverGender")[0].getAttribute("data-receiverGender");
-		var phone = mui("#receiverPhone")[0].value;
-		var province = mui("#province")[0].value;
-		var detailAddress = mui("#detailAdress")[0].value;
+		var phone = util.trim(mui("#receiverPhone")[0].value);
+		var province = util.trim(mui("#province")[0].value);
+		var detailAddress = util.trim(mui("#detailAdress")[0].value);
 
-		if( util.trim(province) == "" ){
+		if( province == "" ){
 			util.toast("请输入地址");
 			return false;
-		} else if ( util.trim(detailAddress) == "" ){
+		} else if ( detailAddress == "" ){
 			util.toast("请输入楼号");
 			return false;
-		} else if ( util.trim(phone) == "" ){
+		} else if ( phone == "" ){
 			util.toast("请输入收货人手机号，方便配送员联系你");
 			return false;
 		} else {

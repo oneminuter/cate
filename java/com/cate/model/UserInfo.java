@@ -10,6 +10,7 @@ public class UserInfo {
 	private int gender;
 	private String icon;
 	private int integral;
+	private int isAdmin;
 	
 	
 	public int getId() {
@@ -65,5 +66,11 @@ public class UserInfo {
 	}
 	public void setIntegral(int integral) {
 		this.integral = integral;
+	}
+	public int getIsAdmin() {
+		return isAdmin;
+	}
+	public void setIsAdmin(int isAdmin) {
+		this.isAdmin = isAdmin;
 	}
 }
