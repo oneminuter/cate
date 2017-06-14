@@ -77,7 +77,9 @@ var urlUtil = {
 		//保存修改的用户信息
 		saveEditUserInfo: "/admin/user/saveEditUserInfo",
 		//删除用户
-		deleteUser: "/admin/user/deleteUser"
+		deleteUser: "/admin/user/deleteUser",
+		//上传头像
+		uploadUserIcon: "/admin/user/uploadUserIcon"
 	},
 	
 	//根据操作名，返回需要请求的路径

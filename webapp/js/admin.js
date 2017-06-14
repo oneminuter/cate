@@ -844,6 +844,73 @@ var user = {
 		return result;
 	},
 
+	getUserList: function(){
+		$.ajax({
+			url: urlUtil.getRequestUrl("getUserList"),
+			type: "post",
+			dataType: "json",
+			success: function(data){
+				if(data.header.success){
+					user.renderUserList(data.body);
+				}else{
+					util.toast(data.header.errorInfo);
+				}
+			},
+			error: function(error){
+				util.toast(error);
+			}
+		});
+	},
+	
+	renderUserList: function(data){
+		var html = "";
+		data.forEach(function(val, index, arr){
+			var htmlTemplate = '<tr>\
+									<td>' + val.id + '</td>\
+									<td>\
+										<input onchange="user.showSaveBtn(' + val.id + ', this, \'username\')" type="text" value="' + val.username + '">\
+									</td>\
+									<td>\
+										<img src="' + val.icon + '" alt="">\
+									</td>\
+									<td>\
+										<input onchange="user.showSaveBtn(' + val.id + ', this, \'phone\')" type="number" value="' + val.phone + '">\
+									</td>\
+									<td>\
+										<select onchange="user.showSaveBtn(' + val.id + ', this, \'gender\')">\
+											<option value="1" ' + (val.gender == 1 ? "selected='true'" : "") + '>男</option>\
+											<option value="0" ' + (val.gender == 1 ? "" : "selected='true'") + '>女</option>\
+										</select>\
+									</td>\
+									<td>\
+										<select onchange="user.showSaveBtn(' + val.id + ', this, \'isAdmin\')">\
+											<option value="0" ' + (val.isAdmin == 1 ? "" : "selected='true'") + '>普通成员</option>\
+											<option value="1" ' + (val.isAdmin == 1 ? "selected='true'" : "") + '>管理员</option>\
+										</select>\
+									</td>\
+									<td>\
+										<input onchange="user.showSaveBtn(' + val.id + ', this, \'balance\')" type="number" value="' + val.balance + '">\
+									</td>\
+									<td>\
+										<input onchange="user.showSaveBtn(' + val.id + ', this, \'cash\')" type="number" value="' + val.cash + '">\
+									</td>\
+									<td>\
+										<input onchange="user.showSaveBtn(' + val.id + ', this, \'integral\')" type="number" value="' + val.integral + '">\
+									</td>\
+									<td>\
+										<a class="save_btn btn_type_3" href="javascript:user.saveEdit(' + val.id + ');">保存</a>\
+										<div class="changePhoto">\
+											<input type="file" accept="image/png,image/jpg,image/jpeg" onchange="user.changePhoto(' + val.id + ', this)">\
+											<a class="btn_type_1" href="javascript:;">修改头像</a>\
+										</div>\
+										<a class="btn_type_2" href="javascript:user.deleteUser(' + val.id + ');">删除</a>\
+									</td>\
+								</tr>';
+			html += htmlTemplate;
+		});
+		document.querySelector(".userList table tbody").innerHTML = html;
+	},
+
 	//显示保存按钮
 	showSaveBtn: function (id, ele, key) {
 		var val = ele.value;
@@ -892,8 +959,43 @@ var user = {
 		});
 	},
 
-	changePhoto: function (id) {
-		
+	changePhoto: function (id, inpuFile) {
+		var file = inpuFile.files[0];
+		if(file.size > 1*1024*1024){
+			util.toast("上传图片不能超过1M");
+		}else{
+			if(window.FileReader){
+				var fr = new FileReader();
+				fr.readAsDataURL(file);
+				fr.onloadend = function(e){
+					var imgBase64 = e.target.result;
+					user.uploadPhoto(id, imgBase64);
+				}
+			}
+		}
+	},
+
+	//上传头像
+	uploadPhoto: function(id, imgBase64){
+		$.ajax({
+			url: urlUtil.getRequestUrl("uploadUserIcon"),
+			data: {
+				id: id,
+				imgBase64: imgBase64
+			},
+			type: "post",
+			dataType: "json",
+			success: function(data){
+				if(data.header.success){
+					user.getUserList();
+				}else{
+					util.toast(data.header.errorInfo);
+				}
+			},
+			error: function(error){
+				util.toast(error);
+			}
+		});
 	},
 
 	deleteUser: function (id, isSure) {
@@ -910,7 +1012,7 @@ var user = {
 				dataType: "json",
 				success: function(data){
 					if(data.header.success){
-						user.deleteUser();
+						user.getUserList();
 					}else{
 						util.toast(data.header.errorInfo);
 					}
@@ -920,68 +1022,5 @@ var user = {
 				}
 			});
 		}
-	},
-
-	getUserList: function(){
-		$.ajax({
-			url: urlUtil.getRequestUrl("getUserList"),
-			type: "post",
-			dataType: "json",
-			success: function(data){
-				if(data.header.success){
-					user.renderUserList(data.body);
-				}else{
-					util.toast(data.header.errorInfo);
-				}
-			},
-			error: function(error){
-				util.toast(error);
-			}
-		});
-	},
-	renderUserList: function(data){
-		var html = "";
-		data.forEach(function(val, index, arr){
-			var htmlTemplate = '<tr>\
-									<td>' + val.id + '</td>\
-									<td>\
-										<input onchange="user.showSaveBtn(' + val.id + ', this, \'username\')" type="text" value="' + val.username + '">\
-									</td>\
-									<td>\
-										<img src="img/user.svg" alt="">\
-									</td>\
-									<td>\
-										<input onchange="user.showSaveBtn(' + val.id + ', this, \'phone\')" type="number" value="' + val.phone + '">\
-									</td>\
-									<td>\
-										<select onchange="user.showSaveBtn(' + val.id + ', this, \'gender\')">\
-											<option value="1" ' + (val.gender == 1 ? "selected='true'" : "") + '>男</option>\
-											<option value="0" ' + (val.gender == 1 ? "" : "selected='true'") + '>女</option>\
-										</select>\
-									</td>\
-									<td>\
-										<select onchange="user.showSaveBtn(' + val.id + ', this, \'isAdmin\')">\
-											<option value="0" ' + (val.isAdmin == 1 ? "" : "selected='true'") + '>普通成员</option>\
-											<option value="1" ' + (val.isAdmin == 1 ? "selected='true'" : "") + '>管理员</option>\
-										</select>\
-									</td>\
-									<td>\
-										<input onchange="user.showSaveBtn(' + val.id + ', this, \'balance\')" type="number" value="' + val.balance + '">\
-									</td>\
-									<td>\
-										<input onchange="user.showSaveBtn(' + val.id + ', this, \'cash\')" type="number" value="' + val.cash + '">\
-									</td>\
-									<td>\
-										<input onchange="user.showSaveBtn(' + val.id + ', this, \'integral\')" type="number" value="' + val.integral + '">\
-									</td>\
-									<td>\
-										<a class="save_btn btn_type_3" href="javascript:user.saveEdit(' + val.id + ');">保存</a>\
-										<a class="btn_type_1" href="javascript:user.changePhoto(' + val.id + ');">修改头像</a>\
-										<a class="btn_type_2" href="javascript:user.deleteUser(' + val.id + ');">删除</a>\
-									</td>\
-								</tr>';
-			html += htmlTemplate;
-		});
-		document.querySelector(".userList table tbody").innerHTML = html;
 	}
 }

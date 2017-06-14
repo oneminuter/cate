@@ -406,7 +406,10 @@
 							</td>
 							<td>
 								<a class="save_btn btn_type_3" href="javascript:user.saveEdit(1);">保存</a>
-								<a class="btn_type_1" href="javascript:user.changePhoto(1);">修改头像</a>
+								<div class="changePhoto">
+									<input type="file" accept="image/png,image/jpg,image/jpeg" onchange="user.changePhoto(1, this)">
+									<a class="btn_type_1" href="javascript:;">修改头像</a>
+								</div>
 								<a class="btn_type_2" href="javascript:user.deleteUser(1);">删除</a>
 							</td>
 						</tr>
