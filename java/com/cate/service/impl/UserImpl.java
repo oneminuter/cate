@@ -82,6 +82,7 @@ public class UserImpl implements UserCenter {
 		map = new HashMap<String, Object>();
 		user.setPhone(phone);
 		user.setPassword(password);
+		user.setIcon("img/user.svg");
 		if(userDao.queryByPhone(phone) != null){
 			header.setSuccess(false);
 			header.setErrorInfo("该账号已注册");
